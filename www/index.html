@@ -34,69 +34,53 @@
 
 <body>
     <div id="app">
-        <!-- Statusbar overlay -->
-        <div class="statusbar"></div>
+       
     
-        <!-- Your main view, should have "view-main" class -->
-        <div class="view view-main">
-            <!-- Initial Page, "data-name" contains page name -->
-            <div data-name="index" class="page">
-    
-                <!-- Top Navbar -->
-                <div class="navbar">
-                    <div class="navbar-bg"></div>
-                    <div class="navbar-inner">
-                        <div class="left"><i class="icon icon-back"></i></div>
-                        <div class="title">Page Title</div>
-                        <div class="right"><i class="icon icon-forward"></i></div>
-                    </div>
-                </div>
-        
-                <!-- Toolbar -->
-                <div class="toolbar toolbar-bottom">
-                    <div class="toolbar-inner">
-                    <!-- Toolbar links -->
-                    <a href="#" class="link">Link 1</a>
-                    <a href="#" class="link">Link 2</a>
-                    </div>
-                </div>
-        
-                <!-- Scrollable page content -->
-                <div class="page-content">
-                    <div class="block">
-                        <p>Page content goes here</p>
-                        <!-- Link to another page -->
-                        <a href="/about/" data-view=".page-content">About app</a>
-						<a href="/news/" data-view=".page-content">About app</a>
-
-                        <!-- In data-popup attribute we specify CSS selector of popup we need to open -->
-                        <p><a href="#" data-popup=".my-popup" class="popup-open">Open Popup</a></p>
-
-                        <!-- And somewhere in DOM -->
-                        <div class="popup my-popup">
-                            <div class="view">
-                                <div class="page">
-                                    <div class="navbar">
-                                        <div class="navbar-bg"></div>
-                                        <div class="navbar-inner">
-                                            <div class="title">Popup</div>
-                                            <div class="right">
-                                                <!-- Link to close popup -->
-                                                <a class="link popup-close">Close</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="page-content">
-                                      ...
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+	<!-- Your main view, should have "view-main" class -->
+	<div class="view view-main">
+		<!-- Initial Page, "data-name" contains page name -->
+		<div data-name="index" class="page">
+			<div class="page-content">
+			  <div class="page no-navbar no-toolbar no-swipeback">
+				<div class="page-content login-screen-content">
+				  <div class="login-screen-title">Mobile Forum</div>
+				  <form>
+					<div class="list">
+					  <ul>
+						<li class="item-content item-input">
+						  <div class="item-inner">
+							<div class="item-title item-label">Usuario</div>
+							<div class="item-input-wrap">
+							  <input type="text" name="username" placeholder="Tu nombre de usuario" id="userLog" />
+							</div>
+						  </div>
+						</li>
+						<li class="item-content item-input">
+						  <div class="item-inner">
+							<div class="item-title item-label">Contraseña</div>
+							<div class="item-input-wrap">
+							  <input type="password" name="password" placeholder="Tu contraseña" id="passLog" />
+							</div>
+						  </div>
+						</li>
+					  </ul>
+					</div>
+					<div class="list">
+					  <ul>
+						<li><a href="#" class="list-button" id="btnIS">Iniciar sesión</a></li>
+					  </ul>
+					  <div class="block-footer">
+						<p>Alternativamente, puedes registrarte creando una cuenta nueva:</p>
+						<p><a href="#" class="link back">Registrarse</a></p>
+					  </div>
+					</div>
+				  </form>
+				</div>
+			  </div>
+			</div>
+		</div>
+	</div>
+</div>
 
 
     <script type="text/javascript" src="cordova.js"></script>
