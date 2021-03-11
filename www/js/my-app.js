@@ -23,6 +23,10 @@ var app = new Framework7({
         path: '/news/',
         url: 'news.html',
       },
+	  {
+        path: '/index/',
+        url: 'index.html',
+      },
     ]
     // ... other 
   });
@@ -31,7 +35,10 @@ var mainView = app.views.create('.view-main');
 
 
 $$(document).on('deviceready', function() {
+	
     console.log("Device is ready!");
+	
+	
 });
 
 /*$$(document).on('page:init', '.page[data-name="about"]', function(){
@@ -44,6 +51,9 @@ $$(document).on('deviceready', function() {
 
 $$(document).on('page:init', function (e) {
 	console.log("entra al init general"); 
+	
+
+	
 })
 
 
@@ -101,24 +111,30 @@ $$(document).on('page:init', '.page[data-name="index"]', function (e) {
 		console.log(error);
 		});
 
+
 		
-        /*if($$("#userLog").val() != "" && $$("#passLog").val() != ""){
-			mainView.router.navigate('/news/');
-        }else{
-            app.dialog.alert("Completa todo los campos","Atención");
-        }; */
-		
-		/*
-		log out 
-		
+    });
+
+});	
+
+
+$$(document).on('page:init', '.page[data-name="news"]', function (e) {
+	
+	console.log("entra al init de news"); 
+	
+	$$("#logOut").on('click', function() {
+        console.log('click en logOut');
 		firebase.auth().signOut().then(() => {
-		  // Sign-out successful.
+			console.log("llego a sing-out");
+			mainView.router.navigate('/index/');	
+				
+			// Sign-out successful.
 		}).catch((error) => {
 		  // An error happened.
 		});
-		*/
 		
     });
+
 });	
 
 
