@@ -9,9 +9,12 @@
             * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
             * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
                 * Enable inline JS: add 'unsafe-inline' to default-src
-        -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">
+       
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">  -->
+	
+	<!--<script src="https://www.gstatic.com/firebasejs/ui/4.6.1/firebase-ui-auth.js"></script> -->
 
+	<link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/4.6.1/firebase-ui-auth.css" />
     <!-- Required meta tags-->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui, viewport-fit=cover">
@@ -71,7 +74,7 @@
 					  </ul>
 					  <div class="block-footer">
 						<p>Alternativamente, puedes registrarte creando una cuenta nueva:</p>
-						<p><a href="#" class="link back">Registrarse</a></p>
+						<p><a href="#" class="link back" id="btnReg">Registrarse</a></p>
 					  </div>
 					</div>
 				  </form>
@@ -83,6 +86,29 @@
 </div>
 
 
+
+	<!-- The core Firebase JS SDK is always required and must be listed first -->
+	<script src="https://www.gstatic.com/firebasejs/8.2.10/firebase-app.js"></script>
+
+	<!-- TODO: Add SDKs for Firebase products that you want to use
+		 https://firebase.google.com/docs/web/setup#available-libraries -->
+	<script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-app.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-auth.js"></script>
+	<script>
+	  // Your web app's Firebase configuration
+	  var firebaseConfig = {
+		apiKey: "AIzaSyCL93p5qpxNDNRASKq3sgniLhPlhIKleJM",
+		authDomain: "mobile-forum-01.firebaseapp.com",
+		projectId: "mobile-forum-01",
+		storageBucket: "mobile-forum-01.appspot.com",
+		messagingSenderId: "666080833841",
+		appId: "1:666080833841:web:3cf0dbadbf14562ce5c010"
+	  };
+	  // Initialize Firebase
+	  firebase.initializeApp(firebaseConfig);
+	</script>
+
+	
     <script type="text/javascript" src="cordova.js"></script>
     <script type="text/javascript" src="lib/framework7/framework7-bundle.min.js"></script>
     <script type="text/javascript" src="js/my-app.js"></script>

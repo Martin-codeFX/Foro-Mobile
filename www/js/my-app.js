@@ -52,14 +52,72 @@ $$(document).on('page:init', function (e) {
 $$(document).on('page:init', '.page[data-name="index"]', function (e) {
 	
 	console.log("entra al init de index"); 
-
+	
+//log in y registro
     $$("#btnIS").on('click', function() {
         console.log('click en btnIS');
-        if($$("#userLog").val() != "" && $$("#passLog").val() != ""){
+		var email = $$("#userLog").val();
+		var password = $$("#passLog").val();
+		firebase.auth().signInWithEmailAndPassword(email, password)
+		.then((user) => {
+			mainView.router.navigate('/news/');
+		})
+
+		.catch(function(error) {
+		// Handle Errors here.
+		var errorCode = error.code;
+		var errorMessage = error.message;
+		alert(errorMessage);
+		
+		console.log(error);
+		});
+
+		
+        /*if($$("#userLog").val() != "" && $$("#passLog").val() != ""){
 			mainView.router.navigate('/news/');
         }else{
             app.dialog.alert("Completa todo los campos","Atención");
-        };        
+        }; */
+
+		
+    });
+	$$("#btnReg").on('click', function() {
+        console.log('click en btnIS');
+		var email = $$("#userLog").val();
+		var password = $$("#passLog").val();
+		firebase.auth().createUserWithEmailAndPassword(email, password)
+
+		.catch(function(error) {
+		// Handle Errors here.
+		var errorCode = error.code;
+		var errorMessage = error.message;
+		if (errorCode == 'auth/weak-password') {
+
+		alert('Clave muy débil.');
+
+		} else {
+			alert(errorMessage);
+			}
+		console.log(error);
+		});
+
+		
+        /*if($$("#userLog").val() != "" && $$("#passLog").val() != ""){
+			mainView.router.navigate('/news/');
+        }else{
+            app.dialog.alert("Completa todo los campos","Atención");
+        }; */
+		
+		/*
+		log out 
+		
+		firebase.auth().signOut().then(() => {
+		  // Sign-out successful.
+		}).catch((error) => {
+		  // An error happened.
+		});
+		*/
+		
     });
 });	
 
