@@ -14,7 +14,8 @@ var app = new Framework7({
     },
     // default routes
     routes: [
-      {	path: '/about/',	url: 'about.html', },//not in use, TODO: borrar si no hace falta
+      {	path: '/msgform/',	url: 'msgform.html', },
+	  {	path: '/topicform/',	url: 'topicform.html', },
 	  {	path: '/news/', url: 'news.html', },
 	  {	path: '/index/', url: 'index.html', }, 
 	  {	path: '/register/', url: 'register.html', },
@@ -82,8 +83,101 @@ $$(document).on('page:init', '.page[data-name="register"]', function (e) {
 		});
 	});
 
-});	
+});
+
+
+$$(document).on('page:init', '.page[data-name="topicform"]', function (e) {
+	console.log("entre a topicform");
 	
+	function listarTemasSelect() {
+        console.log('click en listarTemasSelect');
+		$$('#newTopicSelect').html('');
+		var db = firebase.firestore();
+		var perRef = db.collection("secciones"); 
+		perRef.get() 
+		.then(function(querySnapshot) { 
+		querySnapshot.forEach(function(doc) { 
+		console.log("data:" + doc.data().nombre);
+		$$('#newTopicSelect').append('<option value="'+doc.data().nombre+'">'+ doc.data().nombre +'</option>'); 
+		});
+		})
+		.catch(function(error) { 
+		console.log("Error: " , error);
+		});
+		
+    };
+	listarTemasSelect();	
+
+
+	$$('#btnTopicPost').on('click', function(){
+		var topicTitle = $$('#newTopicTitle').val();
+		var topicSelect = $$('#newTopicSelect').val();
+		var topicText = $$('#newTopicText').html();
+		var topicDate = Date.now()
+		var now = new Date(Date.now());
+		
+		//var formatted = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
+
+		
+		
+		console.log("click en btnTopicPost, veamos qué tenemos: ");
+		console.log("titulo: "+ topicTitle);
+		console.log("sub foro "+ topicSelect);
+		console.log("texto " + topicText);
+		console.log("user mail: " + userEmail);
+		console.log("topicDate : " + topicDate);
+		console.log("now : " + now);
+		
+		//console.log("formatted: " + formatted);
+		
+		
+		
+		var db = firebase.firestore();
+		var data = {
+			titulo_tema: topicTitle,
+			fecha: now,
+			timestamp: topicDate,
+			id_usuario: userEmail,
+			id_seccion: topicSelect,
+			texto: topicText,
+			};
+			
+		db.collection("temas").add(data).then(function(docRef){
+			console.log("OK! Con el ID: " + docRef.id);
+		})
+		.catch(function(error) { 
+			console.log("Error: " + error);
+		});
+		
+
+		
+		
+		
+		
+		
+		
+		
+	});
+
+
+
+});
+
+$$(document).on('page:init', '.page[data-name="msgform"]', function (e) {
+	console.log("entre a msgform");
+	
+	
+
+
+
+
+});
+
+
+
+
+
+
 $$(document).on('page:init', '.page[data-name="index"]', function (e) {
 	
 	console.log(userEmail + " entra al init del index"); 
@@ -136,9 +230,67 @@ $$(document).on('page:init', '.page[data-name="index"]', function (e) {
 $$(document).on('page:init', '.page[data-name="news"]', function (e) {
 	
 	console.log(userEmail + " entra al init de news"); 
+
+	$$("#newMsg").on('click', function() {
+        console.log('click en newMsg');
+		mainView.router.navigate('/msgform/');	
+		
+    });
+
+	$$("#newTopic").on('click', function() {
+        console.log('click en newTopic');
+		mainView.router.navigate('/topicform/');	
+		
+    });
+
+	$$('#buildTemasDataPrompt').on('click', function () {
+		app.dialog.prompt('Nombre de la sección nueva: ', function (name) {
+			app.dialog.confirm('¿Está seguro que la nueva sección es ' + name + '?', function () {
+				sectionName = name;
+				console.log('trabajando en el nombre de la seccion con prompt');
+				var db = firebase.firestore();
+				var data = {
+					nombre: sectionName,
+					numero: 03, //TODO: revisar si hay otra forma de sort que no sea con numero, tal vez use el nombre del tema. sino poner otro prompt
+					};
+				db.collection("secciones").add(data).then(function(docRef){
+				console.log("OK! Con el ID: " + docRef.id);
+				app.dialog.alert('Listo, sección ' + name + ' creada.');
+				listarTemas();
+			})
+			.catch(function(error) { 
+				console.log("Error: " + error);
+				});
+			});
+		});
+	});
+	
+	$$('#deleteTemasDataPrompt').on('click', function () {
+		app.dialog.prompt('Nombre de la sección que desea borrar: ', function (name) {
+			app.dialog.confirm('¿Está seguro que desea borrar la  sección ' + name + '?', function () {
+				sectionName = name;
+				console.log('trabajando en el nombre de la seccion con prompt');
+				
+				var db = firebase.firestore();
+				db.collection("secciones").doc(MiID).delete().then(function() {
+					console.log("Documento borrado!");
+					app.dialog.alert('Listo, sección ' + name + ' borrada.');
+					listarTemas();
+				})
+				.catch(function(error) {
+					console.error("Error: ", error);
+				});
+			});
+		});
+	});
+
+
+
+
 	
 	function listarTemas() {
         console.log('click en listTemasData');
+		$$('#temasLista').html('');
 		var db = firebase.firestore();
 		var perRef = db.collection("secciones"); 
 		perRef.get() 
@@ -170,7 +322,7 @@ $$(document).on('page:init', '.page[data-name="news"]', function (e) {
 		
     });
 	
-	
+	//TODO: ya lo hice con un prompt, se puede sacar
 	$$("#buildSection").on('click', function() {
 		sectionName = "Off-topic";
 		console.log('click en buildSection');

@@ -1,0 +1,63 @@
+<!-- We don't need a full layout in this file because this page will be parsed with Ajax.  -->
+<div class="page" data-name="topicform">
+    <div class="navbar">
+        <div class="navbar-inner sliding">
+        <div class="left">
+            <a href="#" class="link back">
+            <i class="icon icon-back"></i>
+            <span class="aurora-only">Back</span>
+            </a>
+        </div>
+        <div class="title"></div>
+        </div>
+    </div>
+    <div class="page-content">
+	  <div class="page no-navbar no-toolbar no-swipeback">
+		<div class="page-content login-screen-content">
+		  <div class="login-screen-title">cambiar, formulario de topic</div>
+		  <form>
+			<div class="list">
+			  <ul>
+				<li class="item-content item-input">
+				  <div class="item-inner">
+					<div class="item-title item-label">Título</div>
+					<div class="item-input-wrap">
+					  <input type="text" name="newTopicTitle" placeholder="Descripción breve del tema" id="newTopicTitle" value=""/>
+					</div>
+				  </div>
+				</li>
+				<li class="item-content item-input">
+				  <div class="item-inner">
+					<div class="item-title item-label">Sub foro</div>
+					<div class="item-input-wrap input-dropdown-wrap">
+						<select placeholder="Seleccione un sub-foro" id="newTopicSelect">
+							
+						</select>
+					  <!-- <input type="text" name="newTopicSelect" placeholder="poner un select aca" id="newTopicSelect" value=""/> -->
+					</div>
+				  </div>
+				</li>
+				<li class="item-content item-input">
+				  <div class="item-inner">
+					<div class="item-title item-label">Contenido</div>
+					<div class="item-input-wrap">
+						<div class="text-editor text-editor-init">
+							<div  id="newTopicText" class="text-editor-content" contenteditable></div>
+						</div>
+					</div>
+				  </div>
+				</li>
+			  </ul>
+			</div>
+			<div class="list">
+			  <ul>
+				<li><a href="#" class="list-button" id="btnTopicPost">Publicar</a></li>
+			  </ul>
+
+			</div>
+		  </form>
+		</div>
+	  </div>
+	 </div>
+	 
+</div>
