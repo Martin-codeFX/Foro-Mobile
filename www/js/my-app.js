@@ -14,7 +14,8 @@ var app = new Framework7({
     },
     // default routes
     routes: [
-      {	path: '/msgform/',	url: 'msgform.html', },
+      {	path: '/topicview/',	url: 'topicview.html', },
+	  {	path: '/sectionview/',	url: 'topicview.html', },
 	  {	path: '/topicform/',	url: 'topicform.html', },
 	  {	path: '/news/', url: 'news.html', },
 	  {	path: '/index/', url: 'index.html', }, 
@@ -230,12 +231,73 @@ $$(document).on('page:init', '.page[data-name="index"]', function (e) {
 $$(document).on('page:init', '.page[data-name="news"]', function (e) {
 	
 	console.log(userEmail + " entra al init de news"); 
+	/*
+	function leerTopic(){
+		console.log("funcion leerTopic, parametro id del tema, metido a lo bruto en el html");
+		console.log("cambiar valores en el html para OP");
+		
+	}*/
+	
+	function leerTopic() {
+        console.log('click en leerTopic');
+		//$$('#temasLista').html('');
+		
+		mainView.router.navigate('/topicview/');	
+		var db = firebase.firestore();
+		var perRef = db.collection("temas").where("titulo_tema","==", "Reglas");
+		perRef.get().then(function(querySnapshot) { 
+		querySnapshot.forEach(function(doc) { 
+		/*console.log("data:" + doc.data().titulo_tema);
+		console.log("data:" + doc.data().timestamp);
+		console.log("data:" + doc.data().fecha);
+		console.log("data:" + doc.data().id_seccion);
+		console.log("data:" + doc.data().id_usuario);
+		console.log("data:" + doc.data().texto);*/
+		$$('#titleTopicView').html(doc.data().titulo_tema);
+		$$('#viewTopicTimestamp').html(doc.data().timestamp);
+		$$('#viewTopicFecha').html(doc.data().fecha);
+		$$('#viewTopicIdSection').html(doc.data().id_seccion);
+		$$('#viewTopicIdUsuario').html(doc.data().id_usuario);
+		$$('#viewTopicTexto').html(doc.data().texto);
+		
+		//$$('#temasLista').append('<li><a href="#" id="'+doc.data().nombre+'">'+ doc.data().nombre +'</a></li>'); //podria usar "this", tambien una funcion aca mismo, $(selector).append(content,function(index,html))
+		});
+		})
+		.catch(function(error) { 
+		console.log("Error: " , error);
+		});
+		
+    };
+	
+	
+	function leerMensajes(){
+		console.log("funcion leerMensajes");
+		
+	}
+	function mostrarComentar(){
+		console.log("funcion mostrarComentar");
+	}
 
+
+
+	$$("#viewTopic").on('click', function() {
+        console.log('click en viewTopic');
+		leerTopic();
+		leerMensajes();
+		mostrarComentar();
+		
+		
+		
+		//mainView.router.navigate('/msgform/');	
+		
+    });
+	/*
 	$$("#newMsg").on('click', function() {
         console.log('click en newMsg');
 		mainView.router.navigate('/msgform/');	
 		
     });
+	*/
 
 	$$("#newTopic").on('click', function() {
         console.log('click en newTopic');
@@ -298,6 +360,25 @@ $$(document).on('page:init', '.page[data-name="news"]', function (e) {
 		querySnapshot.forEach(function(doc) { 
 		console.log("data:" + doc.data().nombre);
 		$$('#temasLista').append('<li><a href="#" id="'+doc.data().nombre+'">'+ doc.data().nombre +'</a></li>'); //podria usar "this", tambien una funcion aca mismo, $(selector).append(content,function(index,html))
+		
+		
+			//var db = firebase.firestore();
+			var perRef2 = db.collection("temas").where("id_seccion","==", doc.data().nombre); 
+			perRef2.get().then(function(querySnapshot) { 
+				querySnapshot.forEach(function(doc2) { 
+				console.log("data:" + doc2.data().titulo_tema);
+				$$('#temasLista').append('<li><a href="#" id="'+doc2.data().titulo_tema+'">'+ doc2.data().titulo_tema +'</a></li>'); //podria usar "this", tambien una funcion aca mismo, $(selector).append(content,function(index,html))
+			
+			
+			});
+			})
+			.catch(function(error) { 
+			console.log("Error: " , error);
+			});
+		
+		
+		
+		
 		});
 		})
 		.catch(function(error) { 
@@ -305,7 +386,9 @@ $$(document).on('page:init', '.page[data-name="news"]', function (e) {
 		});
 		
     };
-	listarTemas();
+	listarTemas();	
+	
+
 	
 	
 	$$("#logOut").on('click', function() {
