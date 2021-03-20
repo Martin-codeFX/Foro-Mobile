@@ -33,6 +33,9 @@ var ruta = "";
 var rutaTopic = "";
 	
 
+var nombreUser = "";
+
+
 
 $$(document).on('deviceready', function() {
 	
@@ -261,7 +264,61 @@ $$(document).on('page:init', '.page[data-name="topicview"]', function (e, page) 
 			});
 
     };	
+	
+	function showUserAvatar(iduser){
+		console.log("el mail del usuario es comentarios "+ iduser);
+		var db = firebase.firestore();
+		var perRef = db.collection("usuarios").where("mail","==", iduser);
+		perRef.get().then(function(querySnapshot) { 
+		querySnapshot.forEach(function(doc) { 
+		
+		var userAvatar = doc.data().avatar;
+		console.log("entro a avatar con la url: " + userAvatar);
 
+		});
+		})
+	
+	
+		.catch(function(error) { 
+		console.log("Error: " , error);
+		});
+	};	
+	function showUserRol(iduser){
+		console.log("el mail del usuario es comentarios "+ iduser);
+		var db = firebase.firestore();
+		var perRef = db.collection("usuarios").where("mail","==", iduser);
+		perRef.get().then(function(querySnapshot) { 
+		querySnapshot.forEach(function(doc) { 
+		
+		var rolUser = doc.data().rol;
+		console.log("entro a rol con: " + rolUser);
+
+		});
+		})
+	
+	
+		.catch(function(error) { 
+		console.log("Error: " , error);
+		});
+	};
+	function showUserFirma(iduser){
+		console.log("el mail del usuario es comentarios "+ iduser);
+		var db = firebase.firestore();
+		var perRef = db.collection("usuarios").where("mail","==", iduser);
+		perRef.get().then(function(querySnapshot) { 
+		querySnapshot.forEach(function(doc) { 
+		
+		var userFirma = doc.data().firma;
+		console.log("entro a Firma con: " + userFirma);
+
+		});
+		})
+	
+	
+		.catch(function(error) { 
+		console.log("Error: " , error);
+		});
+	};
 
 	function showTopicComments(rutaTopic) {
         
@@ -271,7 +328,7 @@ $$(document).on('page:init', '.page[data-name="topicview"]', function (e, page) 
 		var perRef = db.collection("comentarios").where("id_tema","==", rutaTopic).orderBy("timestamp");
 		perRef.get().then(function(querySnapshot) { 
 		querySnapshot.forEach(function(doc) { 
-		console.log("comentarios:!!!! ");
+		console.log("entra en comentarios: ");
 		console.log("data:" + doc.data().timestamp);
 		console.log("data:" + doc.data().fecha);
 		console.log("data:" + doc.data().hora);
@@ -288,8 +345,20 @@ $$(document).on('page:init', '.page[data-name="topicview"]', function (e, page) 
 		showUserName(doc.data().id_usuario);
 		$$('#topicFecha').html(''+doc.data().fecha);//TODO, se puede acomodar mejor con CSS
 		$$('#topicHora').html(''+doc.data().hora);*/
+
+		//showUserNameComment(doc.data().id_usuario);
 		
-		$$('#listAllComments').append('<div class="card demo-facebook-card"><div class="card-header"><div class="demo-facebook-avatar"><img src="https://cdn.framework7.io/placeholder/people-68x68-1.jpg" width="34" height="34" /></div>					<div class="demo-facebook-name">'+doc.data().id_usuario+'</div>					<div class="demo-facebook-name">topicUserIcon</div>					<div class="demo-facebook-date">'+doc.data().fecha+'</div>					<div class="demo-facebook-date">'+doc.data().hora+'</div>				</div>				<div class="card-content card-content-padding">					'+doc.data().texto+'				</div>				<!-- <div class="card-footer"><a href="#" class="link">Like</a><a href="#" class="link">Comment</a><a href="#"	class="link">Share</a></div> -->			</div>'); 
+
+		var userAvatar = showUserAvatar(doc.data().id_usuario);
+		var userFirma = showUserFirma(doc.data().id_usuario);
+		var userRol = showUserRol(doc.data().id_usuario);
+		console.log(userAvatar);
+		console.log(userFirma);
+		console.log(userRol);
+
+		//dividir el html, primero la parte con el avatar etc y luego la otra con el texto,
+		//otra forma, hacer VARIOS querys, uno para el avatar, otro para la firma y otro para el rol; usaria muchos recursos, pero :/
+		$$('#listAllComments').append('<div class="card demo-facebook-card"><div class="card-header"><div class="demo-facebook-avatar"><img src="'+userAvatar+'" width="34" height="34" /></div>					<div class="demo-facebook-name">'+doc.data().id_usuario+'</div>					<div class="demo-facebook-name">'+userRol+'</div>					<div class="demo-facebook-date">'+doc.data().fecha+'</div>					<div class="demo-facebook-date">'+doc.data().hora+'</div>				</div>				<div class="card-content card-content-padding">					'+doc.data().texto+'				</div>				<div>'+userFirma+'</div> </div>'); 
 		
 		});
 		})
