@@ -14,11 +14,12 @@ var app = new Framework7({
     },
     // default routes
     routes: [
-      {	path: '/topicview/',	url: 'topicview.html', },
-	  {	path: '/sectionview/',	url: 'topicview.html', },
+      {	path: '/topicview/:idTop/',	url: 'topicview.html', },
+	  {	path: '/sectionview/:id/',	url: 'sectionview.html', },
 	  {	path: '/topicform/',	url: 'topicform.html', },
 	  {	path: '/news/', url: 'news.html', },
 	  {	path: '/index/', url: 'index.html', }, 
+	  
 	  {	path: '/register/', url: 'register.html', },
     ]
     // ... other 
@@ -28,7 +29,8 @@ var mainView = app.views.create('.view-main');
 
 var userEmail = "";
 
-
+var ruta = "";
+var rutaTopic = "";
 	
 
 
@@ -61,7 +63,9 @@ $$(document).on('page:init', '.page[data-name="register"]', function (e) {
 			var data = {
 				nombre: userName,
 				mail: email,
-				rol: "user"};
+				firma: "",
+				foto_url: "",
+				rol: "user"};//TODO, implementar firma y url de foto (tal vez usar un boolean para preguntar si existe en vez de crearlo vacío?)
 			
 		db.collection("usuarios").add(data).then(function(docRef) {
 			console.log("OK! Con el ID: " + docRef.id);
@@ -91,7 +95,7 @@ $$(document).on('page:init', '.page[data-name="topicform"]', function (e) {
 	console.log("entre a topicform");
 	
 	function listarTemasSelect() {
-        console.log('click en listarTemasSelect');
+        console.log('fn listarTemasSelect');
 		$$('#newTopicSelect').html('');
 		var db = firebase.firestore();
 		var perRef = db.collection("secciones"); 
@@ -116,10 +120,8 @@ $$(document).on('page:init', '.page[data-name="topicform"]', function (e) {
 		var topicText = $$('#newTopicText').html();
 		var topicDate = Date.now()
 		var now = new Date(Date.now());
-		
-		//var formatted = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
-
-		
+		var horasPost = (''+now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds()+'');
+		var fechaPost = (''+now.getFullYear() + ":" + now.getMonth() + ":" + now.getDate()+'');
 		
 		console.log("click en btnTopicPost, veamos qué tenemos: ");
 		console.log("titulo: "+ topicTitle);
@@ -136,7 +138,8 @@ $$(document).on('page:init', '.page[data-name="topicform"]', function (e) {
 		var db = firebase.firestore();
 		var data = {
 			titulo_tema: topicTitle,
-			fecha: now,
+			fecha: fechaPost,
+			hora: horasPost,
 			timestamp: topicDate,
 			id_usuario: userEmail,
 			id_seccion: topicSelect,
@@ -150,13 +153,6 @@ $$(document).on('page:init', '.page[data-name="topicform"]', function (e) {
 			console.log("Error: " + error);
 		});
 		
-
-		
-		
-		
-		
-		
-		
 		
 	});
 
@@ -164,12 +160,181 @@ $$(document).on('page:init', '.page[data-name="topicform"]', function (e) {
 
 });
 
-$$(document).on('page:init', '.page[data-name="msgform"]', function (e) {
-	console.log("entre a msgform");
+$$(document).on('page:init', '.page[data-name="sectionview"]', function (e, page) {
+	console.log("entre a sectionview");
+	console.log('Pag. Detalle con id: ' + page.route.params.id );
+	ruta = page.route.params.id;
+	listarTopics(ruta);	
+	function tituloSecciones(){
+		$$('#tituloRuta').html(ruta);//TODO, no hace falta hacer una función, pero a lo mejor se le puede agregar algo luego
+	};
+	tituloSecciones();
 	
-	
+	function listarTopics(ruta) {
+        console.log('listaTemasData');
+		$$('#listaTopics').html('');
+		var db = firebase.firestore();
+		var perRef = db.collection("temas").where("id_seccion","==", ruta); 
+		perRef.get().then(function(querySnapshot) { 
+			querySnapshot.forEach(function(doc) { 
+			console.log("data:" + doc.data().titulo_tema);
+			$$('#listaTopics').append('<li><a href="/topicview/'+ doc.data().titulo_tema +'/' +'" id="'+doc.data().titulo_tema+'">'+ doc.data().titulo_tema +'</a></li>');
+			
+			
+			});
+			})
+			.catch(function(error) { 
+			console.log("Error: " , error);
+			});
+
+    };
 
 
+
+});
+
+$$(document).on('page:init', '.page[data-name="topicview"]', function (e, page) {
+	console.log("entre a topicview");
+	//console.log('Pag. Detalle con id: ' + page.route.params.id ); //TODO, no cumple ninguna funcion, creo
+	console.log('Pag. Detalle con idTop: ' + page.route.params.idTop );
+	
+	rutaTopic = page.route.params.idTop;
+	
+	showTopic(rutaTopic);	
+	showTopicComments(rutaTopic);
+	
+	$$('#btnNewComment').on('click', function() {
+		console.log('click btn comentar');
+		var topicText = $$('#newCommentText').html();
+		var topicDate = Date.now()
+		var now = new Date(Date.now());
+		var horasPost = (''+now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds()+'');
+		var fechaPost = (''+now.getFullYear() + ":" + now.getMonth() + ":" + now.getDate()+'');
+		
+		console.log("veamos qué tenemos: ");
+		console.log("id_tema: "+ rutaTopic);
+		console.log("texto " + topicText);
+		console.log("user mail: " + userEmail);
+		console.log("topicDate : " + topicDate);
+		console.log("now : " + now);
+		var db = firebase.firestore();
+		var data = {
+			id_tema: rutaTopic,
+			fecha: fechaPost,
+			hora: horasPost,
+			timestamp: topicDate,
+			id_usuario: userEmail,
+			texto: topicText,
+			};
+			
+		db.collection("comentarios").add(data).then(function(docRef){
+			console.log("OK! Con el ID: " + docRef.id);
+		})
+		.catch(function(error) { 
+			console.log("Error: " + error);
+		});
+			
+		
+    });
+	
+	function showUserName(userId){
+		console.log("el mail del usuario es "+ userId);
+		var db = firebase.firestore();
+		var perRef = db.collection("usuarios").where("mail","==", userId);
+		perRef.get().then(function(querySnapshot) { 
+		querySnapshot.forEach(function(doc) { 
+		
+		$$('#topicUserName').html(doc.data().nombre);
+		
+		$$('#topicUserIcon').html(''+doc.data().rol);
+		//TODO, esto se puede hacer una funcion y cambiar distintas cosas, como ponerle un link a los otros administradores, o ponerle un borde de un color X
+		if(doc.data().rol == "Administrator"){
+			$$('#topicOpAvatar').attr("src","https://png.pngtree.com/png-clipart/20190924/original/pngtree-businessman-user-avatar-free-vector-png-image_4827807.jpg");
+		}
+				
+		});
+		})
+		
+		
+			.catch(function(error) { 
+			console.log("Error: " , error);
+			});
+
+    };	
+
+
+	function showTopicComments(rutaTopic) {
+        
+		console.log('rutaTopic' + rutaTopic);
+
+		var db = firebase.firestore();
+		var perRef = db.collection("comentarios").where("id_tema","==", rutaTopic).orderBy("timestamp");
+		perRef.get().then(function(querySnapshot) { 
+		querySnapshot.forEach(function(doc) { 
+		console.log("comentarios:!!!! ");
+		console.log("data:" + doc.data().timestamp);
+		console.log("data:" + doc.data().fecha);
+		console.log("data:" + doc.data().hora);
+		console.log("data:" + doc.data().id_tema);
+		console.log("data:" + doc.data().id_usuario);
+		console.log("data:" + doc.data().texto);
+		
+		/*$$('#titleTopicView').html(doc.data().titulo_tema);
+		$$('#viewTopicTimestamp').html(doc.data().timestamp);
+		$$('#viewTopicFecha').html(doc.data().fecha);
+		$$('#viewTopicIdSection').html(doc.data().id_seccion);
+		$$('#viewTopicIdUsuario').html(doc.data().id_usuario);
+		$$('#viewTopicTexto').html(doc.data().texto);
+		showUserName(doc.data().id_usuario);
+		$$('#topicFecha').html(''+doc.data().fecha);//TODO, se puede acomodar mejor con CSS
+		$$('#topicHora').html(''+doc.data().hora);*/
+		
+		$$('#listAllComments').append('<div class="card demo-facebook-card"><div class="card-header"><div class="demo-facebook-avatar"><img src="https://cdn.framework7.io/placeholder/people-68x68-1.jpg" width="34" height="34" /></div>					<div class="demo-facebook-name">'+doc.data().id_usuario+'</div>					<div class="demo-facebook-name">topicUserIcon</div>					<div class="demo-facebook-date">'+doc.data().fecha+'</div>					<div class="demo-facebook-date">'+doc.data().hora+'</div>				</div>				<div class="card-content card-content-padding">					'+doc.data().texto+'				</div>				<!-- <div class="card-footer"><a href="#" class="link">Like</a><a href="#" class="link">Comment</a><a href="#"	class="link">Share</a></div> -->			</div>'); 
+		
+		});
+		})
+		
+		
+			.catch(function(error) { 
+			console.log("Error: " , error);
+			});
+
+    };	
+	
+	function showTopic(rutaTopic) {
+        
+		console.log('rutaTopic' + rutaTopic);
+
+		var db = firebase.firestore();
+		var perRef = db.collection("temas").where("titulo_tema","==", rutaTopic);
+		perRef.get().then(function(querySnapshot) { 
+		querySnapshot.forEach(function(doc) { 
+		/*console.log("data:" + doc.data().titulo_tema);
+		console.log("data:" + doc.data().timestamp);
+		console.log("data:" + doc.data().fecha);
+		console.log("data:" + doc.data().id_seccion);
+		console.log("data:" + doc.data().id_usuario);
+		console.log("data:" + doc.data().texto);*/
+		$$('#titleTopicView').html(doc.data().titulo_tema);
+		$$('#viewTopicTimestamp').html(doc.data().timestamp);
+		$$('#viewTopicFecha').html(doc.data().fecha);
+		$$('#viewTopicIdSection').html(doc.data().id_seccion);
+		$$('#viewTopicIdUsuario').html(doc.data().id_usuario);
+		$$('#viewTopicTexto').html(doc.data().texto);
+		showUserName(doc.data().id_usuario);
+		$$('#topicFecha').html(''+doc.data().fecha);//TODO, se puede acomodar mejor con CSS
+		$$('#topicHora').html(''+doc.data().hora);
+		
+		//$$('#temasLista').append('<li><a href="#" id="'+doc.data().nombre+'">'+ doc.data().nombre +'</a></li>'); //podria usar "this", tambien una funcion aca mismo, $(selector).append(content,function(index,html))
+		});
+		})
+		
+		
+			.catch(function(error) { 
+			console.log("Error: " , error);
+			});
+
+    };
 
 
 });
@@ -237,7 +402,7 @@ $$(document).on('page:init', '.page[data-name="news"]', function (e) {
 		console.log("cambiar valores en el html para OP");
 		
 	}*/
-	
+	/*TODO convinar esto con lo de las rutas
 	function leerTopic() {
         console.log('click en leerTopic');
 		//$$('#temasLista').html('');
@@ -252,7 +417,7 @@ $$(document).on('page:init', '.page[data-name="news"]', function (e) {
 		console.log("data:" + doc.data().fecha);
 		console.log("data:" + doc.data().id_seccion);
 		console.log("data:" + doc.data().id_usuario);
-		console.log("data:" + doc.data().texto);*/
+		console.log("data:" + doc.data().texto);
 		$$('#titleTopicView').html(doc.data().titulo_tema);
 		$$('#viewTopicTimestamp').html(doc.data().timestamp);
 		$$('#viewTopicFecha').html(doc.data().fecha);
@@ -268,7 +433,7 @@ $$(document).on('page:init', '.page[data-name="news"]', function (e) {
 		});
 		
     };
-	
+	*/
 	
 	function leerMensajes(){
 		console.log("funcion leerMensajes");
@@ -351,7 +516,7 @@ $$(document).on('page:init', '.page[data-name="news"]', function (e) {
 
 	
 	function listarTemas() {
-        console.log('click en listTemasData');
+        console.log('listaTemasData');
 		$$('#temasLista').html('');
 		var db = firebase.firestore();
 		var perRef = db.collection("secciones"); 
@@ -359,25 +524,9 @@ $$(document).on('page:init', '.page[data-name="news"]', function (e) {
 		.then(function(querySnapshot) { 
 		querySnapshot.forEach(function(doc) { 
 		console.log("data:" + doc.data().nombre);
-		$$('#temasLista').append('<li><a href="#" id="'+doc.data().nombre+'">'+ doc.data().nombre +'</a></li>'); //podria usar "this", tambien una funcion aca mismo, $(selector).append(content,function(index,html))
+		//$$('#temasLista').append('<li><a href="#" id="'+doc.data().nombre+'">'+ doc.data().nombre +'</a></li>'); //podria usar "this", tambien una funcion aca mismo, $(selector).append(content,function(index,html))
 		
-		
-			//var db = firebase.firestore();
-			var perRef2 = db.collection("temas").where("id_seccion","==", doc.data().nombre); 
-			perRef2.get().then(function(querySnapshot) { 
-				querySnapshot.forEach(function(doc2) { 
-				console.log("data:" + doc2.data().titulo_tema);
-				$$('#temasLista').append('<li><a href="#" id="'+doc2.data().titulo_tema+'">'+ doc2.data().titulo_tema +'</a></li>'); //podria usar "this", tambien una funcion aca mismo, $(selector).append(content,function(index,html))
-			
-			
-			});
-			})
-			.catch(function(error) { 
-			console.log("Error: " , error);
-			});
-		
-		
-		
+		$$('#temasLista').append('<li><a href="/sectionview/'+doc.data().nombre +'/' + '" id="'+doc.data().nombre+'">'+ doc.data().nombre +'</a></li>'); 
 		
 		});
 		})
@@ -388,6 +537,7 @@ $$(document).on('page:init', '.page[data-name="news"]', function (e) {
     };
 	listarTemas();	
 	
+
 
 	
 	

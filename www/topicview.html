@@ -15,13 +15,51 @@
 	  <div class="page no-navbar no-toolbar no-swipeback">
 		<div class="page-content login-screen-content">
 		  <div class="login-screen-title" id="titleTopicView"></div>
-		 
-		 
-		 <div id="viewTopicTimestamp"></div>
+			<div class="card demo-facebook-card">
+				<div class="card-header">
+					<div class="demo-facebook-avatar"><img id="topicOpAvatar" src="https://cdn.framework7.io/placeholder/people-68x68-1.jpg" width="34" height="34" /></div>
+					<div class="demo-facebook-name" id="topicUserName"></div>
+					<div class="demo-facebook-name" id="topicUserIcon"></div>
+					<div class="demo-facebook-date" id="topicFecha"></div>
+					<div class="demo-facebook-date" id="topicHora"></div>
+				</div>
+				<div class="card-content card-content-padding">
+					<p id="viewTopicTexto">What a nice photo i took yesterday!</p>
+					<!-- <p class="likes">Likes: 112 &nbsp;&nbsp; Comments: 43</p> -->
+				</div>
+				<!-- <div class="card-footer"><a href="#" class="link">Like</a><a href="#" class="link">Comment</a><a href="#"	class="link">Share</a></div> -->
+			</div>
+			<div id="listAllComments"></div>
+
+			<div class="card demo-facebook-card">
+				<div class="card-header">
+					<div class="demo-facebook-avatar"><img id="topicCurrentUserAvatar" src="https://cdn.framework7.io/placeholder/people-68x68-1.jpg" width="34" height="34" /></div>
+					<div class="demo-facebook-name" id="topicCurrentUserName"></div>
+					<div class="demo-facebook-name" id="topicCurrentUserIcon"></div>
+					<div class="demo-facebook-date" id="topicCurrentUserFecha"></div>
+					<div class="demo-facebook-date" id="topicCurrentUserHora"></div>
+				</div>
+				<div class="card-content card-content-padding">
+					  <div class="item-inner">
+						<div class="item-title item-label">Contenido</div>
+						<div class="item-input-wrap">
+							<div class="text-editor text-editor-init">
+								<div  id="newCommentText" class="text-editor-content" contenteditable></div>
+							</div>
+						</div>
+					</div>
+					<!-- <p class="likes">Likes: 112 &nbsp;&nbsp; Comments: 43</p> -->
+				</div>
+				<div class="card-footer"><a href="#" class="link">Like</a><a href="#" class="link" id="btnNewComment">Comment</a><a href="#"	class="link">Share</a></div>
+			</div>
+
+
+
+		<!-- <div id="viewTopicTimestamp"></div>
 		 <div id="viewTopicFecha"></div>
 		 <div id="viewTopicIdSection"></div>
 		 <div id="viewTopicIdUsuario"></div>
-		 <div id="viewTopicTexto"></div>
+		 <div id="viewTopicTexto"></div> -->
 		 
 		</div>
 	  </div>
