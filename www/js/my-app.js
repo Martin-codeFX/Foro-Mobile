@@ -32,8 +32,10 @@ var userEmail = "";
 var ruta = "";
 var rutaTopic = "";
 	
-
 var nombreUser = "";
+var idPost = "";
+
+
 
 
 
@@ -47,6 +49,7 @@ $$(document).on('deviceready', function() {
 
 $$(document).on('page:init', function (e) {
 	console.log("entra al init general"); 
+	
 	
 
 	
@@ -67,7 +70,7 @@ $$(document).on('page:init', '.page[data-name="register"]', function (e) {
 				nombre: userName,
 				mail: email,
 				firma: "",
-				foto_url: "",
+				avatar: "",
 				rol: "user"};//TODO, implementar firma y url de foto (tal vez usar un boolean para preguntar si existe en vez de crearlo vacío?)
 			
 		db.collection("usuarios").add(data).then(function(docRef) {
@@ -123,6 +126,7 @@ $$(document).on('page:init', '.page[data-name="topicform"]', function (e) {
 		var topicText = $$('#newTopicText').html();
 		var topicDate = Date.now()
 		var now = new Date(Date.now());
+		var fecha_actual = new Date();
 		var horasPost = (''+now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds()+'');
 		var fechaPost = (''+now.getFullYear() + ":" + now.getMonth() + ":" + now.getDate()+'');
 		
@@ -143,10 +147,11 @@ $$(document).on('page:init', '.page[data-name="topicform"]', function (e) {
 			titulo_tema: topicTitle,
 			fecha: fechaPost,
 			hora: horasPost,
-			timestamp: topicDate,
+			timestamp: fecha_actual,
 			id_usuario: userEmail,
 			id_seccion: topicSelect,
 			texto: topicText,
+			noticia: false,
 			};
 			
 		db.collection("temas").add(data).then(function(docRef){
@@ -205,6 +210,32 @@ $$(document).on('page:init', '.page[data-name="topicview"]', function (e, page) 
 	
 	showTopic(rutaTopic);	
 	showTopicComments(rutaTopic);
+	showNewCommentCurrentUser(userEmail);
+	
+	
+	
+	
+	function showNewCommentCurrentUser(userEmail){
+		var db = firebase.firestore();
+		var perRef = db.collection("usuarios").where("mail","==", userEmail);
+		perRef.get().then(function(querySnapshot) { 
+		querySnapshot.forEach(function(doc) { 
+		
+		$$('#topicCurrentUserName').html(doc.data().nombre);
+		//$$('#topicOpFirma').html(doc.data().firma);
+		
+		$$('#topicCurrentUserIcon').html(''+doc.data().rol);
+		$$('#topicCurrentUserAvatar').attr('src',doc.data().avatar);
+		
+		});
+		})
+		
+		
+			.catch(function(error) { 
+			console.log("Error: " , error);
+			});
+
+    };	
 	
 	$$('#btnNewComment').on('click', function() {
 		console.log('click btn comentar');
@@ -213,6 +244,7 @@ $$(document).on('page:init', '.page[data-name="topicview"]', function (e, page) 
 		var now = new Date(Date.now());
 		var horasPost = (''+now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds()+'');
 		var fechaPost = (''+now.getFullYear() + ":" + now.getMonth() + ":" + now.getDate()+'');
+		var fecha_actual = new Date();
 		
 		console.log("veamos qué tenemos: ");
 		console.log("id_tema: "+ rutaTopic);
@@ -225,13 +257,14 @@ $$(document).on('page:init', '.page[data-name="topicview"]', function (e, page) 
 			id_tema: rutaTopic,
 			fecha: fechaPost,
 			hora: horasPost,
-			timestamp: topicDate,
+			timestamp: fecha_actual,
 			id_usuario: userEmail,
 			texto: topicText,
 			};
 			
 		db.collection("comentarios").add(data).then(function(docRef){
 			console.log("OK! Con el ID: " + docRef.id);
+			//showTopicComments(rutaTopic);
 		})
 		.catch(function(error) { 
 			console.log("Error: " + error);
@@ -247,14 +280,12 @@ $$(document).on('page:init', '.page[data-name="topicview"]', function (e, page) 
 		perRef.get().then(function(querySnapshot) { 
 		querySnapshot.forEach(function(doc) { 
 		
-		$$('#topicUserName').html(doc.data().nombre);
+		$$('#topicOpName').html(doc.data().nombre);
+		$$('#topicOpFirma').html(doc.data().firma);
 		
-		$$('#topicUserIcon').html(''+doc.data().rol);
-		//TODO, esto se puede hacer una funcion y cambiar distintas cosas, como ponerle un link a los otros administradores, o ponerle un borde de un color X
-		if(doc.data().rol == "Administrator"){
-			$$('#topicOpAvatar').attr("src","https://png.pngtree.com/png-clipart/20190924/original/pngtree-businessman-user-avatar-free-vector-png-image_4827807.jpg");
-		}
-				
+		$$('#topicOpIcon').html(''+doc.data().rol);
+		$$('#topicOpAvatar').attr('src',doc.data().avatar);
+		
 		});
 		})
 		
@@ -265,67 +296,14 @@ $$(document).on('page:init', '.page[data-name="topicview"]', function (e, page) 
 
     };	
 	
-	function showUserAvatar(iduser){
-		console.log("el mail del usuario es comentarios "+ iduser);
-		var db = firebase.firestore();
-		var perRef = db.collection("usuarios").where("mail","==", iduser);
-		perRef.get().then(function(querySnapshot) { 
-		querySnapshot.forEach(function(doc) { 
-		
-		var userAvatar = doc.data().avatar;
-		console.log("entro a avatar con la url: " + userAvatar);
 
-		});
-		})
-	
-	
-		.catch(function(error) { 
-		console.log("Error: " , error);
-		});
-	};	
-	function showUserRol(iduser){
-		console.log("el mail del usuario es comentarios "+ iduser);
-		var db = firebase.firestore();
-		var perRef = db.collection("usuarios").where("mail","==", iduser);
-		perRef.get().then(function(querySnapshot) { 
-		querySnapshot.forEach(function(doc) { 
-		
-		var rolUser = doc.data().rol;
-		console.log("entro a rol con: " + rolUser);
-
-		});
-		})
-	
-	
-		.catch(function(error) { 
-		console.log("Error: " , error);
-		});
-	};
-	function showUserFirma(iduser){
-		console.log("el mail del usuario es comentarios "+ iduser);
-		var db = firebase.firestore();
-		var perRef = db.collection("usuarios").where("mail","==", iduser);
-		perRef.get().then(function(querySnapshot) { 
-		querySnapshot.forEach(function(doc) { 
-		
-		var userFirma = doc.data().firma;
-		console.log("entro a Firma con: " + userFirma);
-
-		});
-		})
-	
-	
-		.catch(function(error) { 
-		console.log("Error: " , error);
-		});
-	};
 
 	function showTopicComments(rutaTopic) {
         
 		console.log('rutaTopic' + rutaTopic);
 
 		var db = firebase.firestore();
-		var perRef = db.collection("comentarios").where("id_tema","==", rutaTopic).orderBy("timestamp");
+		var perRef = db.collection("comentarios").where("id_tema","==", rutaTopic).orderBy("timestamp");//TODO, ver de filtrar esto mejor, el timestamp está mal?
 		perRef.get().then(function(querySnapshot) { 
 		querySnapshot.forEach(function(doc) { 
 		console.log("entra en comentarios: ");
@@ -347,18 +325,43 @@ $$(document).on('page:init', '.page[data-name="topicview"]', function (e, page) 
 		$$('#topicHora').html(''+doc.data().hora);*/
 
 		//showUserNameComment(doc.data().id_usuario);
+		var userAvatar = "";
+		var userFirma = "";
+		var userRol = "";
+		var userNombre = "";
+		loadUAFRN(doc.data().id_usuario, doc.data().texto, doc.data().fecha, doc.data().hora);
+		function loadUAFRN(userId, texto, fecha, hora){
+		console.log("el mail del usuario es "+ userId);
+		var db2 = firebase.firestore();
+		var perRef2 = db2.collection("usuarios").where("mail","==", userId);
+		perRef2.get().then(function(querySnapshot2) { 
+		querySnapshot2.forEach(function(doc2) { 
 		
-
+		$$('#topicUserName').html(doc2.data().nombre);
+		userAvatar = doc2.data().avatar;
+		userFirma = doc2.data().firma;
+		userRol = doc2.data().rol;
+		userNombre = doc2.data().nombre;
+		console.log("usuario :" +userId +" con AFRN "+ userAvatar +" "+userFirma +" "+userRol +" "+userNombre);
+		$$('#listAllComments').append('<div class="card demo-facebook-card"><div class="card-header"><div class="demo-facebook-avatar"><img src="'+userAvatar+'" width="34" height="34" /></div>					<div class="demo-facebook-name">'+userNombre+'</div>	<div class="demo-facebook-name">'+userId+'</div>					<div class="demo-facebook-name">'+userRol+'</div>					<div class="demo-facebook-date">'+fecha+'</div>					<div class="demo-facebook-date">'+hora+'</div>				</div>				<div class="card-content card-content-padding">					'+ texto +'				</div>				<div>'+userFirma+'</div> </div>'); 
+		});
+		}).catch(function(error) { 
+			console.log("Error: " , error);
+			});
+		};	
+		
+		
+		/*
 		var userAvatar = showUserAvatar(doc.data().id_usuario);
 		var userFirma = showUserFirma(doc.data().id_usuario);
-		var userRol = showUserRol(doc.data().id_usuario);
-		console.log(userAvatar);
-		console.log(userFirma);
-		console.log(userRol);
+		var userRol = showUserRol(doc.data().id_usuario);*/
+		//console.log(userAvatar);
+		//console.log(userFirma);
+		//console.log(userRol);
 
 		//dividir el html, primero la parte con el avatar etc y luego la otra con el texto,
 		//otra forma, hacer VARIOS querys, uno para el avatar, otro para la firma y otro para el rol; usaria muchos recursos, pero :/
-		$$('#listAllComments').append('<div class="card demo-facebook-card"><div class="card-header"><div class="demo-facebook-avatar"><img src="'+userAvatar+'" width="34" height="34" /></div>					<div class="demo-facebook-name">'+doc.data().id_usuario+'</div>					<div class="demo-facebook-name">'+userRol+'</div>					<div class="demo-facebook-date">'+doc.data().fecha+'</div>					<div class="demo-facebook-date">'+doc.data().hora+'</div>				</div>				<div class="card-content card-content-padding">					'+doc.data().texto+'				</div>				<div>'+userFirma+'</div> </div>'); 
+		//$$('#listAllComments').append('<div class="card demo-facebook-card"><div class="card-header"><div class="demo-facebook-avatar"><img src="'+userAvatar+'" width="34" height="34" /></div>					<div class="demo-facebook-name">'+doc.data().id_usuario+'</div>					<div class="demo-facebook-name">'+userRol+'</div>					<div class="demo-facebook-date">'+doc.data().fecha+'</div>					<div class="demo-facebook-date">'+doc.data().hora+'</div>				</div>				<div class="card-content card-content-padding">					'+doc.data().texto+'				</div>				<div>'+userFirma+'</div> </div>'); 
 		
 		});
 		})
@@ -369,6 +372,75 @@ $$(document).on('page:init', '.page[data-name="topicview"]', function (e, page) 
 			});
 
     };	
+	/*
+	function resolveAfter2Seconds(x) {
+		return new Promise(resolve => {
+			setTimeout(() => {
+				resolve(x);
+			}, 2000);
+		});
+	}	
+
+
+	async function showUserAvatar(iduser){
+		
+		console.log("el mail del usuario es comentarios "+ iduser);
+		var db = firebase.firestore();
+		var perRef = db.collection("usuarios").where("mail","==", iduser);
+		perRef.get().then(function(querySnapshot) { 
+		querySnapshot.forEach(function(doc) { 
+		
+		var userAvatar = doc.data().avatar;
+		console.log("entro a avatar con la url: " + userAvatar);
+
+		});
+		})
+	
+	
+		.catch(function(error) { 
+		console.log("Error: " , error);
+		});
+	};	
+	async function showUserRol(iduser){
+		console.log("el mail del usuario es comentarios "+ iduser);
+		var db = firebase.firestore();
+		var perRef = db.collection("usuarios").where("mail","==", iduser);
+		perRef.get().then(function(querySnapshot) { 
+		querySnapshot.forEach(function(doc) { 
+		
+		var rolUser = doc.data().rol;
+		console.log("entro a rol con: " + rolUser);
+
+		});
+		})
+	
+	
+		.catch(function(error) { 
+		console.log("Error: " , error);
+		});
+	};
+	async function showUserFirma(iduser){
+		console.log("el mail del usuario es comentarios "+ iduser);
+		var db = firebase.firestore();
+		var perRef = db.collection("usuarios").where("mail","==", iduser);
+		perRef.get().then(function(querySnapshot) { 
+		querySnapshot.forEach(function(doc) { 
+		
+		var userFirma = doc.data().firma;
+		console.log("entro a Firma con: " + userFirma);
+
+		});
+		})
+	
+	
+		.catch(function(error) { 
+		console.log("Error: " , error);
+		});
+	};*/
+
+
+
+	
 	
 	function showTopic(rutaTopic) {
         
@@ -393,8 +465,11 @@ $$(document).on('page:init', '.page[data-name="topicview"]', function (e, page) 
 		showUserName(doc.data().id_usuario);
 		$$('#topicFecha').html(''+doc.data().fecha);//TODO, se puede acomodar mejor con CSS
 		$$('#topicHora').html(''+doc.data().hora);
+		//if(userEmail== "admin@admin.com"){
+			//$$('#listadoBotonesNoticia').append('<li><a class="list-button" id="btnHacerNoticia">Hacer noticia</a></li> <li><a class="list-button" id="btnQuitarNoticia">Quitar noticia</a></li>');
+			
+		//}		
 		
-		//$$('#temasLista').append('<li><a href="#" id="'+doc.data().nombre+'">'+ doc.data().nombre +'</a></li>'); //podria usar "this", tambien una funcion aca mismo, $(selector).append(content,function(index,html))
 		});
 		})
 		
@@ -404,6 +479,27 @@ $$(document).on('page:init', '.page[data-name="topicview"]', function (e, page) 
 			});
 
     };
+
+
+
+
+	$$("#btnHacerNoticia").on('click', function() {
+        console.log('click en btnHacerNoticia');
+		console.log('rutaTopic' + rutaTopic);
+
+		var db = firebase.firestore();
+		var db.collection("temas").doc(rutaTopic).update({ noticia: true }).then(function() {
+			console.log("actualizado ok");
+		
+		});
+		
+		
+			.catch(function(error) { 
+			console.log("Error: " , error);
+			});
+
+    };
+
 
 
 });
@@ -463,6 +559,40 @@ $$(document).on('page:init', '.page[data-name="index"]', function (e) {
 
 
 $$(document).on('page:init', '.page[data-name="news"]', function (e) {
+	
+		function isNews(){
+		console.log("maybe is news?");
+		var db = firebase.firestore();
+		var perRef = db.collection("temas").where("noticia","==", true);
+		perRef.get().then(function(querySnapshot) { 
+		querySnapshot.forEach(function(doc) { 
+		
+		var titulo = doc.data().titulo_tema;
+		var id_usuario = doc.data().id_usuario;
+		var id_seccion = doc.data().id_seccion;
+		var val_hora = doc.data().hora;
+		var texto = doc.data().texto;
+		console.log("hay una noticia: " + titulo);
+		$$('#noticiasLista').append('				  <li>					<a href="/topicview/'+titulo +'/' + '" class="item-link item-content">					  <div class="item-inner">						<div class="item-title-row">						  <div class="item-title">'+titulo+'</div>						  <div class="item-after">'+val_hora+'</div>						</div>						<div class="item-subtitle">Escrito por '+id_usuario+' en '+id_seccion+'</div>						<div class="item-text">'+texto+'</div>					  </div>					</a>					</li> ');
+		
+		});
+		})
+		
+		
+			.catch(function(error) { 
+			console.log("Error: " , error);
+			});
+
+    };	
+	isNews();
+	
+	
+	
+	$$("#esNoticia").on('click', function() {
+		console.log('click en esNoticia');
+		isNews();
+
+	});
 	
 	console.log(userEmail + " entra al init de news"); 
 	/*
@@ -597,14 +727,17 @@ $$(document).on('page:init', '.page[data-name="news"]', function (e) {
 		
 		$$('#temasLista').append('<li><a href="/sectionview/'+doc.data().nombre +'/' + '" id="'+doc.data().nombre+'">'+ doc.data().nombre +'</a></li>'); 
 		
+		
 		});
+		
 		})
 		.catch(function(error) { 
 		console.log("Error: " , error);
 		});
 		
     };
-	listarTemas();	
+	listarTemas();
+	
 	
 
 
