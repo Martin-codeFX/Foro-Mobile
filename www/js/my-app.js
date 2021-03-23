@@ -14,7 +14,7 @@ var app = new Framework7({
     },
     // default routes
     routes: [
-      {	path: '/topicview/:idTop/',	url: 'topicview.html', },
+      {	path: '/topicview/:idTop/:idKey/',	url: 'topicview.html', },
 	  {	path: '/sectionview/:id/',	url: 'sectionview.html', },
 	  {	path: '/topicform/',	url: 'topicform.html', },
 	  {	path: '/news/', url: 'news.html', },
@@ -34,7 +34,8 @@ var rutaTopic = "";
 	
 var nombreUser = "";
 var idPost = "";
-
+var idCurrentUser = "";
+var idCurrentTopic ="";
 
 
 
@@ -186,7 +187,7 @@ $$(document).on('page:init', '.page[data-name="sectionview"]', function (e, page
 		perRef.get().then(function(querySnapshot) { 
 			querySnapshot.forEach(function(doc) { 
 			console.log("data:" + doc.data().titulo_tema);
-			$$('#listaTopics').append('<li><a href="/topicview/'+ doc.data().titulo_tema +'/' +'" id="'+doc.data().titulo_tema+'">'+ doc.data().titulo_tema +'</a></li>');
+			$$('#listaTopics').append('<li><a href="/topicview/'+ doc.data().titulo_tema +'/'+doc.id+'/' +'" id="'+doc.data().titulo_tema+'">'+ doc.data().titulo_tema +'</a></li>');
 			
 			
 			});
@@ -205,13 +206,15 @@ $$(document).on('page:init', '.page[data-name="topicview"]', function (e, page) 
 	console.log("entre a topicview");
 	//console.log('Pag. Detalle con id: ' + page.route.params.id ); //TODO, no cumple ninguna funcion, creo
 	console.log('Pag. Detalle con idTop: ' + page.route.params.idTop );
+	console.log('Pag. Detalle con idKey: ' + page.route.params.idKey );
 	
 	rutaTopic = page.route.params.idTop;
+	idCurrentTopic = page.route.params.idKey;
 	
 	showTopic(rutaTopic);	
 	showTopicComments(rutaTopic);
 	showNewCommentCurrentUser(userEmail);
-	
+	//loadUsersInfo();
 	
 	
 	
@@ -295,13 +298,41 @@ $$(document).on('page:init', '.page[data-name="topicview"]', function (e, page) 
 			});
 
     };	
-	
+	/*
+	function loadUsersInfo(){
+		console.log("cargo usersinfo");
+		var db = firebase.firestore();
+		var perRef = db.collection("usuarios").where("mail","!=", false);
+		perRef.get().then(function(querySnapshot) { 
+		querySnapshot.forEach(function(doc) { 
+		
+		var userKey = doc.id;
+		var userNombre = "#userNombre"+userKey;
+		var userFirma = "#userFirma"+userKey;
+		var userRol = "#userRol"+userKey;
+		var userAvatar = "#userAvatar"+userKey;
+		
+		$$(userNombre).html(doc.data().nombre);
+		$$(userFirma).html(doc.data().firma);
+		$$(userRol).html(''+doc.data().rol);
+		$$(userAvatar).attr('src',doc.data().avatar);
+		
+		});
+		})
+		
+		
+			.catch(function(error) { 
+			console.log("Error: " , error);
+			});
+
+    };	
+	*/
 
 
 	function showTopicComments(rutaTopic) {
         
 		console.log('rutaTopic' + rutaTopic);
-
+		//loadUsersInfo();
 		var db = firebase.firestore();
 		var perRef = db.collection("comentarios").where("id_tema","==", rutaTopic).orderBy("timestamp");//TODO, ver de filtrar esto mejor, el timestamp está mal?
 		perRef.get().then(function(querySnapshot) { 
@@ -314,41 +345,16 @@ $$(document).on('page:init', '.page[data-name="topicview"]', function (e, page) 
 		console.log("data:" + doc.data().id_usuario);
 		console.log("data:" + doc.data().texto);
 		
-		/*$$('#titleTopicView').html(doc.data().titulo_tema);
-		$$('#viewTopicTimestamp').html(doc.data().timestamp);
-		$$('#viewTopicFecha').html(doc.data().fecha);
-		$$('#viewTopicIdSection').html(doc.data().id_seccion);
-		$$('#viewTopicIdUsuario').html(doc.data().id_usuario);
-		$$('#viewTopicTexto').html(doc.data().texto);
-		showUserName(doc.data().id_usuario);
-		$$('#topicFecha').html(''+doc.data().fecha);//TODO, se puede acomodar mejor con CSS
-		$$('#topicHora').html(''+doc.data().hora);*/
-
-		//showUserNameComment(doc.data().id_usuario);
-		var userAvatar = "";
-		var userFirma = "";
-		var userRol = "";
-		var userNombre = "";
-		loadUAFRN(doc.data().id_usuario, doc.data().texto, doc.data().fecha, doc.data().hora);
-		function loadUAFRN(userId, texto, fecha, hora){
-		console.log("el mail del usuario es "+ userId);
-		var db2 = firebase.firestore();
-		var perRef2 = db2.collection("usuarios").where("mail","==", userId);
-		perRef2.get().then(function(querySnapshot2) { 
-		querySnapshot2.forEach(function(doc2) { 
+		/*
+		var email = doc.data().id_usuario;
+		var userNombre = "#userNombre"+emailA;
+		var userFirma = "#userFirma"+emailA;
+		var userRol = "#userRol"+emailA;
+		var userAvatar = "#userAvatar"+emailA;*/
+		var fecha = doc.data().fecha;
+		var hora = doc.data().hora;
+		var texto = doc.data().texto;
 		
-		$$('#topicUserName').html(doc2.data().nombre);
-		userAvatar = doc2.data().avatar;
-		userFirma = doc2.data().firma;
-		userRol = doc2.data().rol;
-		userNombre = doc2.data().nombre;
-		console.log("usuario :" +userId +" con AFRN "+ userAvatar +" "+userFirma +" "+userRol +" "+userNombre);
-		$$('#listAllComments').append('<div class="card demo-facebook-card"><div class="card-header"><div class="demo-facebook-avatar"><img src="'+userAvatar+'" width="34" height="34" /></div>					<div class="demo-facebook-name">'+userNombre+'</div>	<div class="demo-facebook-name">'+userId+'</div>					<div class="demo-facebook-name">'+userRol+'</div>					<div class="demo-facebook-date">'+fecha+'</div>					<div class="demo-facebook-date">'+hora+'</div>				</div>				<div class="card-content card-content-padding">					'+ texto +'				</div>				<div>'+userFirma+'</div> </div>'); 
-		});
-		}).catch(function(error) { 
-			console.log("Error: " , error);
-			});
-		};	
 		
 		
 		/*
@@ -363,6 +369,9 @@ $$(document).on('page:init', '.page[data-name="topicview"]', function (e, page) 
 		//otra forma, hacer VARIOS querys, uno para el avatar, otro para la firma y otro para el rol; usaria muchos recursos, pero :/
 		//$$('#listAllComments').append('<div class="card demo-facebook-card"><div class="card-header"><div class="demo-facebook-avatar"><img src="'+userAvatar+'" width="34" height="34" /></div>					<div class="demo-facebook-name">'+doc.data().id_usuario+'</div>					<div class="demo-facebook-name">'+userRol+'</div>					<div class="demo-facebook-date">'+doc.data().fecha+'</div>					<div class="demo-facebook-date">'+doc.data().hora+'</div>				</div>				<div class="card-content card-content-padding">					'+doc.data().texto+'				</div>				<div>'+userFirma+'</div> </div>'); 
 		
+		//este sirve, acomodar
+		//$$('#listAllComments').append('<div class="card demo-facebook-card"><div class="card-header"><div class="demo-facebook-avatar"><img id="'+userAvatar+'"src="" width="34" height="34" /></div>					<div class="demo-facebook-name" id="'+userNombre+'"></div>	<div class="demo-facebook-name" id="'+emailA+'"></div>					<div class="demo-facebook-name" id="'+userRol+'"></div>					<div class="demo-facebook-date">'+fecha+'</div>					<div class="demo-facebook-date">'+hora+'</div>				</div>				<div class="card-content card-content-padding">					'+ texto +'				</div>				<div id="'+userFirma+'"></div> </div>'); 
+		$$('#listAllComments').append('<div class="card demo-facebook-card"><div class="card-header"><div class="demo-facebook-avatar"><img id=""src="" width="34" height="34" /></div>					<div class="demo-facebook-name" id=""></div>	<div class="demo-facebook-name" id=""></div>		'+doc.data().id_usuario+'			<div class="demo-facebook-name" id=""></div>					<div class="demo-facebook-date">'+fecha+'</div>					<div class="demo-facebook-date">'+hora+'</div>				</div>				<div class="card-content card-content-padding">					'+ texto +'				</div>				<div id=""></div> </div>'); 
 		});
 		})
 		
@@ -372,72 +381,7 @@ $$(document).on('page:init', '.page[data-name="topicview"]', function (e, page) 
 			});
 
     };	
-	/*
-	function resolveAfter2Seconds(x) {
-		return new Promise(resolve => {
-			setTimeout(() => {
-				resolve(x);
-			}, 2000);
-		});
-	}	
-
-
-	async function showUserAvatar(iduser){
-		
-		console.log("el mail del usuario es comentarios "+ iduser);
-		var db = firebase.firestore();
-		var perRef = db.collection("usuarios").where("mail","==", iduser);
-		perRef.get().then(function(querySnapshot) { 
-		querySnapshot.forEach(function(doc) { 
-		
-		var userAvatar = doc.data().avatar;
-		console.log("entro a avatar con la url: " + userAvatar);
-
-		});
-		})
 	
-	
-		.catch(function(error) { 
-		console.log("Error: " , error);
-		});
-	};	
-	async function showUserRol(iduser){
-		console.log("el mail del usuario es comentarios "+ iduser);
-		var db = firebase.firestore();
-		var perRef = db.collection("usuarios").where("mail","==", iduser);
-		perRef.get().then(function(querySnapshot) { 
-		querySnapshot.forEach(function(doc) { 
-		
-		var rolUser = doc.data().rol;
-		console.log("entro a rol con: " + rolUser);
-
-		});
-		})
-	
-	
-		.catch(function(error) { 
-		console.log("Error: " , error);
-		});
-	};
-	async function showUserFirma(iduser){
-		console.log("el mail del usuario es comentarios "+ iduser);
-		var db = firebase.firestore();
-		var perRef = db.collection("usuarios").where("mail","==", iduser);
-		perRef.get().then(function(querySnapshot) { 
-		querySnapshot.forEach(function(doc) { 
-		
-		var userFirma = doc.data().firma;
-		console.log("entro a Firma con: " + userFirma);
-
-		});
-		})
-	
-	
-		.catch(function(error) { 
-		console.log("Error: " , error);
-		});
-	};*/
-
 
 
 	
@@ -480,15 +424,81 @@ $$(document).on('page:init', '.page[data-name="topicview"]', function (e, page) 
 
     };
 
+	$$('#deleteTemasDataConfirm').on('click', function () {
+		
+		app.dialog.confirm('¿Está seguro que desea borrar el tema ' + rutaTopic + '?', function () {
+			
+			console.log('trabajando en el nombre de la seccion con prompt');
+			//buscar la id del tema, 
+			//sin boton, ponerlo en el topic, guardar el doc.id en una variable y usarlo ahi
+			
+			
+			var db = firebase.firestore();
+			db.collection("temas").doc(idCurrentTopic).delete().then(function() {
+				console.log("Documento borrado!");
+				app.dialog.alert('Listo, tema ' + rutaTopic + ' borrado.');
+				mainView.router.navigate('/news/');
+				
+			})
+			.catch(function(error) {
+				console.error("Error: ", error);
+			});
+		});
+		
+	});
 
 
+	$$('#btnHacerNoticia').on('click', function () {
+		
+		app.dialog.confirm('¿Está seguro que desea hacer noticia el tema ' + rutaTopic + '?', function () {
+			
+			console.log('trabajando en el nombre de la seccion con prompt');
+			//buscar la id del tema, 
+			//sin boton, ponerlo en el topic, guardar el doc.id en una variable y usarlo ahi
+			
+			
+			var db = firebase.firestore();
+			db.collection("temas").doc(idCurrentTopic).update({ noticia: true }).then(function() {
+				console.log("Documento borrado!");
+				app.dialog.alert('Listo, tema ' + rutaTopic + ' es noticia.');
+				mainView.router.navigate('/news/');
+				
+			})
+			.catch(function(error) {
+				console.error("Error: ", error);
+			});
+		});
+		
+	});
+	$$('#btnQuitarNoticia').on('click', function () {
+		
+		app.dialog.confirm('¿Está seguro que desea quitar de noticias el tema ' + rutaTopic + '?', function () {
+			
+			console.log('trabajando en el nombre de la seccion con prompt');
+			//buscar la id del tema, 
+			//sin boton, ponerlo en el topic, guardar el doc.id en una variable y usarlo ahi
+			
+			
+			var db = firebase.firestore();
+			db.collection("temas").doc(idCurrentTopic).update({ noticia: false }).then(function() {
+				console.log("Documento borrado!");
+				app.dialog.alert('Listo, tema ' + rutaTopic + ' ya no es noticia.');
+				mainView.router.navigate('/news/');
+				
+			})
+			.catch(function(error) {
+				console.error("Error: ", error);
+			});
+		});
+		
+	});
 
-	$$("#btnHacerNoticia").on('click', function() {
+	/*$$("#btnHacerNoticia").on('click', function() {
         console.log('click en btnHacerNoticia');
 		console.log('rutaTopic' + rutaTopic);
 
 		var db = firebase.firestore();
-		var db.collection("temas").doc(rutaTopic).update({ noticia: true }).then(function() {
+		var db.collection("temas").doc(idCurrentTopic).update({ noticia: true }).then(function() {
 			console.log("actualizado ok");
 		
 		});
@@ -498,12 +508,11 @@ $$(document).on('page:init', '.page[data-name="topicview"]', function (e, page) 
 			console.log("Error: " , error);
 			});
 
-    };
+    };*/
 
 
 
 });
-
 
 
 
@@ -560,21 +569,16 @@ $$(document).on('page:init', '.page[data-name="index"]', function (e) {
 
 $$(document).on('page:init', '.page[data-name="news"]', function (e) {
 	
-		function isNews(){
-		console.log("maybe is news?");
+	
+	
+	function getUserRandomId(){
 		var db = firebase.firestore();
-		var perRef = db.collection("temas").where("noticia","==", true);
-		perRef.get().then(function(querySnapshot) { 
-		querySnapshot.forEach(function(doc) { 
-		
-		var titulo = doc.data().titulo_tema;
-		var id_usuario = doc.data().id_usuario;
-		var id_seccion = doc.data().id_seccion;
-		var val_hora = doc.data().hora;
-		var texto = doc.data().texto;
-		console.log("hay una noticia: " + titulo);
-		$$('#noticiasLista').append('				  <li>					<a href="/topicview/'+titulo +'/' + '" class="item-link item-content">					  <div class="item-inner">						<div class="item-title-row">						  <div class="item-title">'+titulo+'</div>						  <div class="item-after">'+val_hora+'</div>						</div>						<div class="item-subtitle">Escrito por '+id_usuario+' en '+id_seccion+'</div>						<div class="item-text">'+texto+'</div>					  </div>					</a>					</li> ');
-		
+		var perRef = db.collection("usuarios").where("mail","==", userEmail);
+		perRef.get().then(function(querySnapshot) {
+			querySnapshot.forEach(function(doc) {
+				console.log("data:" + doc.data().nombre );
+				console.log("id usuario:" + doc.id );
+				idCurrentUser = doc.id;
 		});
 		})
 		
@@ -582,6 +586,36 @@ $$(document).on('page:init', '.page[data-name="news"]', function (e) {
 			.catch(function(error) { 
 			console.log("Error: " , error);
 			});
+
+    };	
+		
+	getUserRandomId();
+	
+	
+	
+	function isNews(){
+	console.log("maybe is news?");
+	var db = firebase.firestore();
+	var perRef = db.collection("temas").where("noticia","==", true);
+	perRef.get().then(function(querySnapshot) { 
+	querySnapshot.forEach(function(doc) { 
+	
+	var titulo = doc.data().titulo_tema;
+	var id_usuario = doc.data().id_usuario;
+	var id_seccion = doc.data().id_seccion;
+	var val_hora = doc.data().hora;
+	var texto = doc.data().texto;
+	console.log("hay una noticia: " + titulo);
+	console.log("con id: " + doc.id);
+	$$('#noticiasLista').append('				  <li>					<a href="/topicview/'+titulo +'/' +doc.id+'/' + '" class="item-link item-content">					  <div class="item-inner">						<div class="item-title-row">						  <div class="item-title">'+titulo+'</div>						  <div class="item-after">'+val_hora+'</div>						</div>						<div class="item-subtitle">Escrito por '+id_usuario+' en '+id_seccion+'</div>						<div class="item-text">'+texto+'</div>					  </div>					</a>					</li> ');
+	
+	});
+	})
+	
+	
+		.catch(function(error) { 
+		console.log("Error: " , error);
+		});
 
     };	
 	isNews();
@@ -691,24 +725,7 @@ $$(document).on('page:init', '.page[data-name="news"]', function (e) {
 		});
 	});
 	
-	$$('#deleteTemasDataPrompt').on('click', function () {
-		app.dialog.prompt('Nombre de la sección que desea borrar: ', function (name) {
-			app.dialog.confirm('¿Está seguro que desea borrar la  sección ' + name + '?', function () {
-				sectionName = name;
-				console.log('trabajando en el nombre de la seccion con prompt');
-				
-				var db = firebase.firestore();
-				db.collection("secciones").doc(MiID).delete().then(function() {
-					console.log("Documento borrado!");
-					app.dialog.alert('Listo, sección ' + name + ' borrada.');
-					listarTemas();
-				})
-				.catch(function(error) {
-					console.error("Error: ", error);
-				});
-			});
-		});
-	});
+
 
 
 
@@ -791,6 +808,57 @@ $$(document).on('page:init', '.page[data-name="news"]', function (e) {
 		});
 		
     });
+	//TODO agregarle un prompt/hecho, está listo para acomodar con css
+	$$("#cambiarFirma").on('click', function() {
+        console.log('click en cambiarFirma');
+		app.dialog.prompt('Tu nueva firma es: ', function (firmaT) {
+			app.dialog.confirm('¿Está seguro que tu nueva firma es ' + firmaT + '?', function () {
+				console.log('trabajando en la firma');
+				var db = firebase.firestore();
+				db.collection("usuarios").doc(idCurrentUser).update({ firma: firmaT }).then(function() {
+					console.log("firma cambiada");
+					app.dialog.alert('Listo, firma es ' + firmaT);
+				})
+				.catch(function(error) {
+					console.error("Error: ", error);
+				});
+			});
+		});
+	});
+	
+	$$(cambiarAvatar).on('click', function() {
+        console.log('click en cambiarAvatar');
+		app.dialog.prompt('Tu nuevo avatar es: ', function (avatarN) {
+			app.dialog.confirm('¿Está seguro que tu nueva firma es ' + avatarN + '?', function () {
+				console.log('trabajando en la firma');
+				var db = firebase.firestore();
+				db.collection("usuarios").doc(idCurrentUser).update({ avatar: avatarN }).then(function() {
+					console.log("avatar cambiado");
+					app.dialog.alert('Listo, tu avatar es ' + avatarN);
+				})
+				.catch(function(error) {
+					console.error("Error: ", error);
+				});
+			});
+		});
+	});
+	
+	
+	//TODO agregarle un prompt
+	/*$$("#cambiarAvatar").on('click', function() {
+        console.log('click en bajadata');
+		
+		var db = firebase.firestore();
+		db.collection("usuarios").doc(idCurrentUser).update({ avatar: "https://upload.wikimedia.org/wikipedia/commons/f/f4/User_Avatar_2.png" }).then(function() {
+			console.log("avatar cambiado");
+			})
+		.catch(function(error) {
+
+			console.error("Error: ", error);
+
+		});
+		
+    });*/
 
 	$$("#listData").on('click', function() {
         console.log('click en listdata');
