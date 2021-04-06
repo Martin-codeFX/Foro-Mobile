@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html class="md device-pixel-ratio-3 device-desktop device-windows device-cordova">
 <head>
     <!--
         Customize this policy to fit your own app's needs. For more guidance, see:
@@ -33,6 +33,9 @@
     <link rel="stylesheet" href="css/icons.css">
     <!-- Path to your custom app styles-->
     <link rel="stylesheet" href="css/app.css">
+	<link rel="preconnect" href="https://fonts.gstatic.com">
+	<link href="https://fonts.googleapis.com/css2?family=Raleway&display=swap" rel="stylesheet">
+    
 </head>
 
 <body>
@@ -46,38 +49,40 @@
 			<div class="page-content">
 			  <div class="page no-navbar no-toolbar no-swipeback">
 				<div class="page-content login-screen-content">
-				  <div class="login-screen-title">Mobile Forum</div>
-				  <form>
-					<div class="list">
-					  <ul>
-						<li class="item-content item-input">
-						  <div class="item-inner">
-							<div class="item-title item-label">Usuario</div>
-							<div class="item-input-wrap">
-							  <input type="text" name="username" placeholder="Tu Email" id="userLog" value="admin@admin.com"/>
-							</div>
+				  <div class="block-title block-title-medium">Foro Mobile</div>
+				  <div class="block block-strong">
+					  <form>
+						<div class="list">
+						  <ul>
+							<li class="item-content item-input">
+							  <div class="item-inner">
+								<div class="item-title item-label">Correo</div>
+								<div class="item-input-wrap">
+								  <input type="text" name="username" placeholder="Tu Email" id="userLog" value=""/>
+								</div>
+							  </div>
+							</li>
+							<li class="item-content item-input">
+							  <div class="item-inner">
+								<div class="item-title item-label">Contraseña</div>
+								<div class="item-input-wrap">
+								  <input type="password" name="password" placeholder="Tu contraseña" id="passLog" value=""/>
+								</div>
+							  </div>
+							</li>
+						  </ul>
+						</div>
+						<div class="list">
+						  <ul>
+							<li><a href="#" class="list-button" id="btnIS">Iniciar sesión</a></li>
+						  </ul>
+						  <div class="block-footer">
+							<p>Alternativamente, puedes registrarte creando una cuenta nueva:</p>
+							<p><a href="#" class="link back" id="btnRegForm">Registrarse</a></p>
 						  </div>
-						</li>
-						<li class="item-content item-input">
-						  <div class="item-inner">
-							<div class="item-title item-label">Contraseña</div>
-							<div class="item-input-wrap">
-							  <input type="password" name="password" placeholder="Tu contraseña" id="passLog" value="123456"/>
-							</div>
-						  </div>
-						</li>
-					  </ul>
-					</div>
-					<div class="list">
-					  <ul>
-						<li><a href="#" class="list-button" id="btnIS">Iniciar sesión</a></li>
-					  </ul>
-					  <div class="block-footer">
-						<p>Alternativamente, puedes registrarte creando una cuenta nueva:</p>
-						<p><a href="#" class="link back" id="btnRegForm">Registrarse</a></p>
-					  </div>
-					</div>
-				  </form>
+						</div>
+					  </form>
+				  </div>
 				</div>
 			  </div>
 			</div>
@@ -115,6 +120,7 @@
     <script type="text/javascript" src="cordova.js"></script>
     <script type="text/javascript" src="lib/framework7/framework7-bundle.min.js"></script>
     <script type="text/javascript" src="js/my-app.js"></script>
+	<link rel="stylesheet" href="css/styles.css">
 </body>
 
 </html>
