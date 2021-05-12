@@ -32,24 +32,23 @@
     <!-- Path to icons -->
     <link rel="stylesheet" href="css/icons.css">
     <!-- Path to your custom app styles-->
-    <link rel="stylesheet" href="css/app.css">
+	<link rel="stylesheet" href="css/app.css">
 	<link rel="preconnect" href="https://fonts.gstatic.com">
 	<link href="https://fonts.googleapis.com/css2?family=Raleway&display=swap" rel="stylesheet">
     
 </head>
 
 <body>
-    <div id="app">
-       
-    
+
 	<!-- Your main view, should have "view-main" class -->
-	<div class="view view-main">
+	<div class="view view-main wrapper">
 		<!-- Initial Page, "data-name" contains page name -->
 		<div data-name="index" class="page">
 			<div class="page-content">
 			  <div class="page no-navbar no-toolbar no-swipeback">
 				<div class="page-content login-screen-content">
-				  <div class="block-title block-title-medium">Foro Mobile</div>
+					<div class="block-header"><img src="img/logo-free.png" alt="logo" id="logo"></img></div>
+					<div class="block-title block-title-medium" id="tituloForo" class="glow">Foro Mobile</div>
 				  <div class="block block-strong">
 					  <form>
 						<div class="list">
@@ -58,7 +57,7 @@
 							  <div class="item-inner">
 								<div class="item-title item-label">Correo</div>
 								<div class="item-input-wrap">
-								  <input type="text" name="username" placeholder="Tu Email" id="userLog" value=""/>
+								  <input type="text" name="username" placeholder="Tu Email" id="userLog" value="admin@admin.com"/>
 								</div>
 							  </div>
 							</li>
@@ -66,7 +65,7 @@
 							  <div class="item-inner">
 								<div class="item-title item-label">Contraseña</div>
 								<div class="item-input-wrap">
-								  <input type="password" name="password" placeholder="Tu contraseña" id="passLog" value=""/>
+								  <input type="password" name="password" placeholder="Tu contraseña" id="passLog" value="123456"/>
 								</div>
 							  </div>
 							</li>
@@ -78,7 +77,7 @@
 						  </ul>
 						  <div class="block-footer">
 							<p>Alternativamente, puedes registrarte creando una cuenta nueva:</p>
-							<p><a href="#" class="link back" id="btnRegForm">Registrarse</a></p>
+							<p><a href="#" class="list-button" id="btnRegForm">Registrarse</a></p>
 						  </div>
 						</div>
 					  </form>
@@ -88,7 +87,7 @@
 			</div>
 		</div>
 	</div>
-</div>
+
 
 
 
@@ -120,7 +119,7 @@
     <script type="text/javascript" src="cordova.js"></script>
     <script type="text/javascript" src="lib/framework7/framework7-bundle.min.js"></script>
     <script type="text/javascript" src="js/my-app.js"></script>
-	<link rel="stylesheet" href="css/styles.css">
+	
 </body>
 
 </html>

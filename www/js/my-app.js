@@ -14,14 +14,14 @@ var app = new Framework7({
     },
     // default routes
     routes: [
-      {	path: '/topicview/:idTop/:idKey/',	url: 'topicview.html', },
-	  {	path: '/sectionview/:id/',	url: 'sectionview.html', },
-	  {	path: '/topicform/',	url: 'topicform.html', },
-	  {	path: '/topicformsectiondelete/',	url: 'topicformsectiondelete.html', },
-	  {	path: '/news/', url: 'news.html', },
-	  {	path: '/index/', url: 'index.html', }, 
+      {	path: '/topicview/:idTop/:idKey/',	url: 'topicview.html', options: { transition: 'f7-dive',},  },
+	  {	path: '/sectionview/:id/',	url: 'sectionview.html', options: { transition: 'f7-dive',},  },
+	  {	path: '/topicform/',	url: 'topicform.html', options: { transition: 'f7-dive',},  },
+	  {	path: '/topicformsectiondelete/',	url: 'topicformsectiondelete.html', options: { transition: 'f7-dive',},  },
+	  {	path: '/news/', url: 'news.html', options: { transition: 'f7-dive',}, },
+	  {	path: '/index/', url: 'index.html', options: { transition: 'f7-dive',}, }, 
 	  
-	  {	path: '/register/', url: 'register.html', },
+	  {	path: '/register/', url: 'register.html', options: { transition: 'f7-dive',}, },
     ]
     // ... other 
   });
@@ -106,6 +106,10 @@ $$(document).on('page:init', function (e) {
 
 $$(document).on('page:init', '.page[data-name="register"]', function (e) {
 	console.log("entre a registro");
+	$$("#btnBackReg").on('click', function() {
+		console.log("click en btnBackReg");
+		mainView.router.navigate('/index/');
+	});
 	$$("#btnReg").on('click', function() {
 		console.log('click en btnReg');
 		var userName = $$("#regUser").val();//TODO: guardar nombre de usuario//hecho :D
@@ -388,12 +392,13 @@ $$(document).on('page:init', '.page[data-name="topicview"]', function (e, page) 
 	$$('#menuForoUrl').on('click', function(){
 		mainView.router.navigate('/news/');
 	});
+	
 	showTopic(rutaTopic);	
 	showNewCommentCurrentUser(userEmail);	
 	showTopicComments(rutaTopic);
 	
 	
-	function showTopic(rutaTopic) {
+	function showTopic(rutaTopic){
         
 		console.log('rutaTopic' + rutaTopic);
 
@@ -401,42 +406,39 @@ $$(document).on('page:init', '.page[data-name="topicview"]', function (e, page) 
 		var perRef = db.collection("temas").where("titulo_tema","==", rutaTopic);
 		perRef.get().then(function(querySnapshot) { 
 		querySnapshot.forEach(function(doc) { 
-		/*console.log("data:" + doc.data().titulo_tema);
-		console.log("data:" + doc.data().timestamp);
-		console.log("data:" + doc.data().fecha);
-		console.log("data:" + doc.data().id_seccion);
-		console.log("data:" + doc.data().id_usuario);
-		console.log("data:" + doc.data().texto);*/
-		$$('#titleTopicView').html(doc.data().titulo_tema);
-		$$('#viewTopicTimestamp').html(doc.data().timestamp);
-		$$('#viewTopicFecha').html(doc.data().fecha);
-		$$('#viewTopicIdSection').html(doc.data().id_seccion);
-		$$('#viewTopicIdUsuario').html(doc.data().id_usuario);
-		$$('#viewTopicTexto').html(doc.data().texto);
-		showUserName(doc.data().id_usuario);
-		$$('#topicFecha').html(''+doc.data().fecha);//TODO, se puede acomodar mejor con CSS
-		$$('#topicHora').html(''+doc.data().hora);
-		if(userEmail=="admin@admin.com"){
-			isAdmin();
-		}else if(userEmail == doc.data().id_usuario){
-			isOp();
-		}else {
-			console.log("not Admin or OP");
-		}
-		//if(userEmail== "admin@admin.com"){
-			//$$('#listadoBotonesNoticia').append('<li><a class="list-button" id="btnHacerNoticia">Hacer noticia</a></li> <li><a class="list-button" id="btnQuitarNoticia">Quitar noticia</a></li>');
+			/*console.log("data:" + doc.data().titulo_tema);
+			console.log("data:" + doc.data().timestamp);
+			console.log("data:" + doc.data().fecha);
+			console.log("data:" + doc.data().id_seccion);
+			console.log("data:" + doc.data().id_usuario);
+			console.log("data:" + doc.data().texto);*/
+			$$('#titleTopicView').html(doc.data().titulo_tema);
+			$$('#viewTopicTimestamp').html(doc.data().timestamp);
+			$$('#viewTopicFecha').html(doc.data().fecha);
+			$$('#viewTopicIdSection').html(doc.data().id_seccion);
+			$$('#viewTopicIdUsuario').html(doc.data().id_usuario);
+			$$('#viewTopicTexto').html(doc.data().texto);
+			showUserName(doc.data().id_usuario);
+			$$('#topicFecha').html(''+doc.data().fecha);//TODO, se puede acomodar mejor con CSS
+			$$('#topicHora').html(''+doc.data().hora);
+			if(userEmail=="admin@admin.com"){
+				isAdmin();
+			}else if(userEmail == doc.data().id_usuario){
+				isOp();
+			}else {
+				console.log("not Admin or OP");
+			}
+			//if(userEmail== "admin@admin.com"){
+				//$$('#listadoBotonesNoticia').append('<li><a class="list-button" id="btnHacerNoticia">Hacer noticia</a></li> <li><a class="list-button" id="btnQuitarNoticia">Quitar noticia</a></li>');
+				
+			//}		
 			
-		//}		
-		
-		});
-		})
-		
-		
-			.catch(function(error) { 
-			console.log("Error: " , error);
 			});
-
-    };
+		})
+		.catch(function(error) { 
+		console.log("Error: " , error);
+		});
+	};
 	
 	function showUserName(userId){
 		console.log("el mail del usuario es "+ userId);
@@ -455,9 +457,9 @@ $$(document).on('page:init', '.page[data-name="topicview"]', function (e, page) 
 		})
 		
 		
-			.catch(function(error) { 
-			console.log("Error: " , error);
-			});
+		.catch(function(error) { 
+		console.log("Error: " , error);
+		});
 
     };	
 	
@@ -497,9 +499,7 @@ $$(document).on('page:init', '.page[data-name="topicview"]', function (e, page) 
 		.catch(function(error) { 
 			console.log("Error: " + error);
 		});
-			
-		
-    });	
+	});	
 
 	function showNewCommentCurrentUser(userEmail){
 		var db = firebase.firestore();
@@ -517,9 +517,9 @@ $$(document).on('page:init', '.page[data-name="topicview"]', function (e, page) 
 		})
 		
 		
-			.catch(function(error) { 
-			console.log("Error: " , error);
-			});
+		.catch(function(error) { 
+		console.log("Error: " , error);
+		});
 
     };	
 	
@@ -610,7 +610,59 @@ $$(document).on('page:init', '.page[data-name="topicview"]', function (e, page) 
 
     };*/
 
+	function showUserRol(userEmail){
+		var db = firebase.firestore();
+		var perRef = db.collection("usuarios").where("mail","==", userEmail);
+		perRef.get().then(function(querySnapshot) { 
+		querySnapshot.forEach(function(doc) { 
+		
+		return doc.data().rol;
+		
+		});
+		})
+		
+		
+			.catch(function(error) { 
+			console.log("Error: " , error);
+			});
 
+    };	
+	
+		function showUserFirma(userEmail){
+		var db = firebase.firestore();
+		var perRef = db.collection("usuarios").where("mail","==", userEmail);
+		perRef.get().then(function(querySnapshot) { 
+		querySnapshot.forEach(function(doc) { 
+		
+		return doc.data().firma;
+		
+		});
+		})
+		
+		
+			.catch(function(error) { 
+			console.log("Error: " , error);
+			});
+
+    };	
+	
+	function showUserAvatar(userEmail){
+		var db = firebase.firestore();
+		var perRef = db.collection("usuarios").where("mail","==", userEmail);
+		perRef.get().then(function(querySnapshot) { 
+		querySnapshot.forEach(function(doc) { 
+		
+		return doc.data().avatar;
+		
+		});
+		})
+		
+		
+			.catch(function(error) { 
+			console.log("Error: " , error);
+			});
+
+    };	
 
 
 	function showTopicComments(rutaTopic) {
@@ -673,9 +725,6 @@ $$(document).on('page:init', '.page[data-name="topicview"]', function (e, page) 
 			console.log("Error: " , error);
 			});
 		
-		
-
-		
 
 		//$$('#listAllComments').append('<div class="card demo-facebook-card"><div class="card-header"><div class="demo-facebook-avatar"><img src="'+userAvatar+'" width="34" height="34" /></div>					<div class="demo-facebook-name">'+doc.data().id_usuario+'</div>					<div class="demo-facebook-name">'+userRol+'</div>					<div class="demo-facebook-date">'+doc.data().fecha+'</div>					<div class="demo-facebook-date">'+doc.data().hora+'</div>				</div>				<div class="card-content card-content-padding">					'+doc.data().texto+'				</div>				<div>'+userFirma+'</div> </div>'); 
 		
@@ -686,9 +735,9 @@ $$(document).on('page:init', '.page[data-name="topicview"]', function (e, page) 
 		})
 		
 		
-			.catch(function(error) { 
-			console.log("Error: " , error);
-			});
+		.catch(function(error) { 
+		console.log("Error: " , error);
+		});
 
     };	
 
@@ -703,75 +752,19 @@ $$(document).on('page:init', '.page[data-name="topicview"]', function (e, page) 
 		
 		});
 		})
-		
-		
-			.catch(function(error) { 
-			console.log("Error: " , error);
-			});
-
-    };	
-	
-	function showUserRol(userEmail){
-		var db = firebase.firestore();
-		var perRef = db.collection("usuarios").where("mail","==", userEmail);
-		perRef.get().then(function(querySnapshot) { 
-		querySnapshot.forEach(function(doc) { 
-		
-		return doc.data().rol;
-		
+		.catch(function(error) { 
+				console.log("Error: " , error);
+				
 		});
-		})
-		
-		
-			.catch(function(error) { 
-			console.log("Error: " , error);
-			});
-
-    };	
+	};	
 	
-		function showUserFirma(userEmail){
-		var db = firebase.firestore();
-		var perRef = db.collection("usuarios").where("mail","==", userEmail);
-		perRef.get().then(function(querySnapshot) { 
-		querySnapshot.forEach(function(doc) { 
-		
-		return doc.data().firma;
-		
-		});
-		})
-		
-		
-			.catch(function(error) { 
-			console.log("Error: " , error);
-			});
-
-    };	
-	
-	function showUserAvatar(userEmail){
-		var db = firebase.firestore();
-		var perRef = db.collection("usuarios").where("mail","==", userEmail);
-		perRef.get().then(function(querySnapshot) { 
-		querySnapshot.forEach(function(doc) { 
-		
-		return doc.data().avatar;
-		
-		});
-		})
-		
-		
-			.catch(function(error) { 
-			console.log("Error: " , error);
-			});
-
-    };	
-
-
 
 
 
 });
 
-
+//no esta bien cerrado algo arriba --^
+//y rompe cosas abajo 
 
 
 
@@ -892,7 +885,7 @@ $$(document).on('page:init', '.page[data-name="news"]', function (e) {
 			});
 
     };	
-		
+	
 	getUserRandomId();
 	
 	
@@ -923,7 +916,9 @@ $$(document).on('page:init', '.page[data-name="news"]', function (e) {
 		});
 
     };	
-	isNews();
+	if(userEmail != ""){
+		isNews();
+	}
 	
 	
 	
@@ -1098,7 +1093,9 @@ $$(document).on('page:init', '.page[data-name="news"]', function (e) {
 		firebase.auth().signOut().then(() => {
 			console.log("llego a sing-out");
 			userEmail = "";
-			app.views.main.router.navigate('/index/', {reloadAll: true}) /*
+			ruta = "";
+			rutaTopic = "";
+			mainView.router.navigate('/index/') /*
 			reload agresivo porque f7 se hace el loco y no me muestra el form de registro después de iniciar sesión.*/
 			// Sign-out successful.
 		}).catch((error) => {
