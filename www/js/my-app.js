@@ -1,4 +1,4 @@
-  
+
 var $$ = Dom7;
 
 var app = new Framework7({
@@ -19,11 +19,11 @@ var app = new Framework7({
 	  {	path: '/topicform/',	url: 'topicform.html', options: { transition: 'f7-dive',},  },
 	  {	path: '/topicformsectiondelete/',	url: 'topicformsectiondelete.html', options: { transition: 'f7-dive',},  },
 	  {	path: '/news/', url: 'news.html', options: { transition: 'f7-dive',}, },
-	  {	path: '/index/', url: 'index.html', options: { transition: 'f7-dive',}, }, 
-	  
+	  {	path: '/index/', url: 'index.html', options: { transition: 'f7-dive',}, },
+
 	  {	path: '/register/', url: 'register.html', options: { transition: 'f7-dive',}, },
     ]
-    // ... other 
+    // ... other
   });
 
 var mainView = app.views.create('.view-main');
@@ -32,7 +32,7 @@ var userEmail = "";
 
 var ruta = "";
 var rutaTopic = "";
-	
+
 var nombreUser = "";
 var idPost = "";
 var idCurrentUser = "";
@@ -67,14 +67,14 @@ function isOp(){
 
 	function deleteMsg(mgsId) {
         console.log('click en bajadata');
-		
+
 		var db = firebase.firestore();
 		db.collection("comentarios").doc(mgsId).delete().then(function() {
 			console.log("Documento borrado!");
-			
+
 			/*
-			showTopic(rutaTopic);	
-			showNewCommentCurrentUser(userEmail);	
+			showTopic(rutaTopic);
+			showNewCommentCurrentUser(userEmail);
 			showTopicComments(rutaTopic); */
 			mainView.router.navigate('/news/');
 			})
@@ -83,24 +83,24 @@ function isOp(){
 			console.error("Error: ", error);
 
 		});
-		
+
     };
 
 
 $$(document).on('deviceready', function() {
-	
+
     console.log("Device is ready!");
-	
-	
+
+
 });
 
 
 $$(document).on('page:init', function (e) {
-	console.log("entra al init general"); 
-	
-	
+	console.log("entra al init general");
 
-	
+
+
+
 });
 
 
@@ -124,12 +124,12 @@ $$(document).on('page:init', '.page[data-name="register"]', function (e) {
 				firma: "",
 				avatar: "",
 				rol: "Usuario"};//TODO, implementar firma y url de foto (tal vez usar un boolean para preguntar si existe en vez de crearlo vacío?)
-			
+
 		db.collection("usuarios").add(data).then(function(docRef) {
 			console.log("OK! Con el ID: " + docRef.id);
 			app.dialog.alert('Registro completado, ' + userName);
 			mainView.router.navigate('/index/');
-			
+
 		})
 		.catch(function(error) {
 			console.log("Error: " + error);
@@ -160,44 +160,44 @@ $$(document).on('page:init', '.page[data-name="topicformsectiondelete"]', functi
         console.log('fn deleteSectionSelect');
 		$$('#deleteSectionSelect').html('');
 		var db = firebase.firestore();
-		var perRef = db.collection("secciones"); 
-		perRef.get().then(function(querySnapshot) { 
-			querySnapshot.forEach(function(doc) { 
+		var perRef = db.collection("secciones");
+		perRef.get().then(function(querySnapshot) {
+			querySnapshot.forEach(function(doc) {
 			console.log("data:" + doc.data().nombre);
-			//$$('#deleteSectionSelect').append('<option value="'+doc.id+'">'+ doc.data().nombre +'</option>'); 
-			$$('#deleteSectionSelect').append('<option value="'+doc.data().nombre+'">'+ doc.data().nombre +'</option>'); 
-		
+			//$$('#deleteSectionSelect').append('<option value="'+doc.id+'">'+ doc.data().nombre +'</option>');
+			$$('#deleteSectionSelect').append('<option value="'+doc.data().nombre+'">'+ doc.data().nombre +'</option>');
+
 		});
 		})
-		.catch(function(error) { 
+		.catch(function(error) {
 		console.log("Error: " , error);
 		});
-		
+
     };
-	
-	deleteSectionSelectFn();	
+
+	deleteSectionSelectFn();
 
 	$$('#btnSectionDelete').on('click', function(){
 	var sectionToDelete =$$('#deleteSectionSelect').val();
 	var nombreSection = $$('#deleteSectionSelect').html();
-	
-		
+
+
 		console.log('trabajando en el nombre de la seccion con prompt');
-		//buscar la id del tema, 
+		//buscar la id del tema,
 		//sin boton, ponerlo en el topic, guardar el doc.id en una variable y usarlo ahi
-		
-		
+
+
 		var db = firebase.firestore();
 		db.collection("secciones").doc(sectionToDelete).delete().then(function() {
 			console.log("Documento borrado!");
 			app.dialog.alert('Listo, sección ' + nombreSection + ' borrada.');
 			mainView.router.navigate('/news/');
-			
+
 		})
 		.catch(function(error) {
 			console.error("Error: ", error);
 		});
-	
+
 
 });
 
@@ -205,25 +205,25 @@ $$(document).on('page:init', '.page[data-name="topicformsectiondelete"]', functi
 
 $$(document).on('page:init', '.page[data-name="topicform"]', function (e) {
 	console.log("entre a topicform");
-	
+
 	function listarTemasSelect() {
         console.log('fn listarTemasSelect');
 		$$('#newTopicSelect').html('');
 		var db = firebase.firestore();
-		var perRef = db.collection("secciones"); 
-		perRef.get() 
-		.then(function(querySnapshot) { 
-		querySnapshot.forEach(function(doc) { 
+		var perRef = db.collection("secciones");
+		perRef.get()
+		.then(function(querySnapshot) {
+		querySnapshot.forEach(function(doc) {
 		console.log("data:" + doc.data().nombre);
-		$$('#newTopicSelect').append('<option value="'+doc.data().nombre+'">'+ doc.data().nombre +'</option>'); 
+		$$('#newTopicSelect').append('<option value="'+doc.data().nombre+'">'+ doc.data().nombre +'</option>');
 		});
 		})
-		.catch(function(error) { 
+		.catch(function(error) {
 		console.log("Error: " , error);
 		});
-		
+
     };
-	listarTemasSelect();	
+	listarTemasSelect();
 
 
 	$$('#btnTopicPost').on('click', function(){
@@ -235,7 +235,7 @@ $$(document).on('page:init', '.page[data-name="topicform"]', function (e) {
 		var fecha_actual = new Date();
 		var horasPost = (''+now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds()+'');
 		var fechaPost = (''+now.getFullYear() + ":" + now.getMonth() + ":" + now.getDate()+'');
-		
+
 		console.log("click en btnTopicPost, veamos qué tenemos: ");
 		console.log("titulo: "+ topicTitle);
 		console.log("sub foro "+ topicSelect);
@@ -243,11 +243,11 @@ $$(document).on('page:init', '.page[data-name="topicform"]', function (e) {
 		console.log("user mail: " + userEmail);
 		console.log("topicDate : " + topicDate);
 		console.log("now : " + now);
-		
+
 		//console.log("formatted: " + formatted);
-		
-		
-		
+
+
+
 		var db = firebase.firestore();
 		var data = {
 			titulo_tema: topicTitle,
@@ -259,16 +259,16 @@ $$(document).on('page:init', '.page[data-name="topicform"]', function (e) {
 			texto: topicText,
 			noticia: false,
 			};
-			
+
 		db.collection("temas").add(data).then(function(docRef){
 			console.log("OK! Con el ID: " + docRef.id);
 			mainView.router.navigate('/topicview/'+ topicTitle +'/'+docRef.id+'/' );
 		})
-		.catch(function(error) { 
+		.catch(function(error) {
 			console.log("Error: " + error);
 		});
-		
-		
+
+
 	});
 
 
@@ -279,26 +279,26 @@ $$(document).on('page:init', '.page[data-name="sectionview"]', function (e, page
 	console.log("entre a sectionview");
 	console.log('Pag. Detalle con id: ' + page.route.params.id );
 	ruta = page.route.params.id;
-	listarTopics(ruta);	
+	listarTopics(ruta);
 	function tituloSecciones(){
 		$$('#tituloRuta').html(ruta);//TODO, no hace falta hacer una función, pero a lo mejor se le puede agregar algo luego
 	};
 	tituloSecciones();
-	
+
 	function listarTopics(ruta) {
         console.log('listaTemasData');
 		$$('#listaTopics').html('');
 		var db = firebase.firestore();
-		var perRef = db.collection("temas").where("id_seccion","==", ruta); 
-		perRef.get().then(function(querySnapshot) { 
-			querySnapshot.forEach(function(doc) { 
+		var perRef = db.collection("temas").where("id_seccion","==", ruta);
+		perRef.get().then(function(querySnapshot) {
+			querySnapshot.forEach(function(doc) {
 			console.log("data:" + doc.data().titulo_tema);
 			$$('#listaTopics').append('<li><a href="/topicview/'+ doc.data().titulo_tema +'/'+doc.id+'/' +'" id="'+doc.data().titulo_tema+'">'+ doc.data().titulo_tema +'</a></li>');
-			
-			
+
+
 			});
 			})
-			.catch(function(error) { 
+			.catch(function(error) {
 			console.log("Error: " , error);
 			});
 
@@ -306,10 +306,10 @@ $$(document).on('page:init', '.page[data-name="sectionview"]', function (e, page
 //TODO hacer newtopic y newsection global, ya que los uso en varios lados
 	function newTopic() {
         console.log('click en btnNewTopic');
-		mainView.router.navigate('/topicform/');	
-		
+		mainView.router.navigate('/topicform/');
+
     };
-	
+
 	function newSection() {
 		app.dialog.prompt('Nombre de la sección nueva: ', function (name) {
 			app.dialog.confirm('¿Está seguro que la nueva sección es ' + name + '?', function () {
@@ -325,12 +325,12 @@ $$(document).on('page:init', '.page[data-name="sectionview"]', function (e, page
 				app.dialog.alert('Listo, sección ' + name + ' creada.');
 				listarTemas();
 			})
-			.catch(function(error) { 
+			.catch(function(error) {
 				console.log("Error: " + error);
 				});
 			});
 		});
-	};	
+	};
 
     $$("#btnTopicMenu2").on("click",function(){
         console.log('click en botones ac2');
@@ -344,7 +344,7 @@ $$(document).on('page:init', '.page[data-name="sectionview"]', function (e, page
 							newTopic();
                         }
                     },
-                   
+
 					{
                         text: 'Nueva Sección',
                         onClick: function(){
@@ -353,11 +353,11 @@ $$(document).on('page:init', '.page[data-name="sectionview"]', function (e, page
                         }
                     },
 
-					
+
                 ],
-                
+
             });
-			
+
 		}else{
 			var btnTopicMenu = app.actions.create({
                 buttons: [
@@ -375,7 +375,7 @@ $$(document).on('page:init', '.page[data-name="sectionview"]', function (e, page
 		}
 
         btnTopicMenu.open();
-    });	
+    });
 
 
 
@@ -386,26 +386,26 @@ $$(document).on('page:init', '.page[data-name="topicview"]', function (e, page) 
 	//console.log('Pag. Detalle con id: ' + page.route.params.id ); //TODO, no cumple ninguna funcion, creo
 	console.log('Pag. Detalle con idTop: ' + page.route.params.idTop );
 	console.log('Pag. Detalle con idKey: ' + page.route.params.idKey );
-	
+
 	rutaTopic = page.route.params.idTop;
 	idCurrentTopic = page.route.params.idKey;
 	$$('#menuForoUrl').on('click', function(){
 		mainView.router.navigate('/news/');
 	});
-	
-	showTopic(rutaTopic);	
-	showNewCommentCurrentUser(userEmail);	
+
+	showTopic(rutaTopic);
+	showNewCommentCurrentUser(userEmail);
 	showTopicComments(rutaTopic);
-	
-	
+
+
 	function showTopic(rutaTopic){
-        
+
 		console.log('rutaTopic' + rutaTopic);
 
 		var db = firebase.firestore();
 		var perRef = db.collection("temas").where("titulo_tema","==", rutaTopic);
-		perRef.get().then(function(querySnapshot) { 
-		querySnapshot.forEach(function(doc) { 
+		perRef.get().then(function(querySnapshot) {
+		querySnapshot.forEach(function(doc) {
 			/*console.log("data:" + doc.data().titulo_tema);
 			console.log("data:" + doc.data().timestamp);
 			console.log("data:" + doc.data().fecha);
@@ -430,39 +430,39 @@ $$(document).on('page:init', '.page[data-name="topicview"]', function (e, page) 
 			}
 			//if(userEmail== "admin@admin.com"){
 				//$$('#listadoBotonesNoticia').append('<li><a class="list-button" id="btnHacerNoticia">Hacer noticia</a></li> <li><a class="list-button" id="btnQuitarNoticia">Quitar noticia</a></li>');
-				
-			//}		
-			
+
+			//}
+
 			});
 		})
-		.catch(function(error) { 
+		.catch(function(error) {
 		console.log("Error: " , error);
 		});
 	};
-	
+
 	function showUserName(userId){
 		console.log("el mail del usuario es "+ userId);
 		var db = firebase.firestore();
 		var perRef = db.collection("usuarios").where("mail","==", userId);
-		perRef.get().then(function(querySnapshot) { 
-		querySnapshot.forEach(function(doc) { 
-		
+		perRef.get().then(function(querySnapshot) {
+		querySnapshot.forEach(function(doc) {
+
 		$$('#topicOpName').html(doc.data().nombre);
 		$$('#topicOpFirma').html(doc.data().firma);
-		
+
 		$$('#topicOpIcon').html(''+doc.data().rol);
 		$$('#topicOpAvatar').attr('src',doc.data().avatar);
-		
+
 		});
 		})
-		
-		
-		.catch(function(error) { 
+
+
+		.catch(function(error) {
 		console.log("Error: " , error);
 		});
 
-    };	
-	
+    };
+
 	$$('#btnNewComment').on('click', function() {
 		console.log('click btn comentar');
 		var topicText = $$('#newCommentText').html();
@@ -471,7 +471,7 @@ $$(document).on('page:init', '.page[data-name="topicview"]', function (e, page) 
 		var horasPost = (''+now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds()+'');
 		var fechaPost = (''+now.getFullYear() + ":" + now.getMonth() + ":" + now.getDate()+'');
 		var fecha_actual = new Date();
-		
+
 		console.log("veamos qué tenemos: ");
 		console.log("id_tema: "+ rutaTopic);
 		console.log("texto " + topicText);
@@ -487,110 +487,110 @@ $$(document).on('page:init', '.page[data-name="topicview"]', function (e, page) 
 			id_usuario: userEmail,
 			texto: topicText,
 			};
-			
+
 		db.collection("comentarios").add(data).then(function(docRef){
 			console.log("OK! Con el ID: " + docRef.id);
 			//mainView.router.navigate('/topicview/'+ rutaTopic +'/'+idCurrentTopic+'/' );
-			showTopic(rutaTopic);	
-			showNewCommentCurrentUser(userEmail);	
+			showTopic(rutaTopic);
+			showNewCommentCurrentUser(userEmail);
 			showTopicComments(rutaTopic);
 			//showTopicComments(rutaTopic);
 		})
-		.catch(function(error) { 
+		.catch(function(error) {
 			console.log("Error: " + error);
 		});
-	});	
+	});
 
 	function showNewCommentCurrentUser(userEmail){
 		var db = firebase.firestore();
 		var perRef = db.collection("usuarios").where("mail","==", userEmail);
-		perRef.get().then(function(querySnapshot) { 
-		querySnapshot.forEach(function(doc) { 
-		
+		perRef.get().then(function(querySnapshot) {
+		querySnapshot.forEach(function(doc) {
+
 		$$('#topicCurrentUserName').html(doc.data().nombre);
 		//$$('#topicOpFirma').html(doc.data().firma);
-		
+
 		$$('#topicCurrentUserIcon').html(''+doc.data().rol);
 		$$('#topicCurrentUserAvatar').attr('src',doc.data().avatar);
-		
+
 		});
 		})
-		
-		
-		.catch(function(error) { 
+
+
+		.catch(function(error) {
 		console.log("Error: " , error);
 		});
 
-    };	
-	
+    };
+
 
 	$$('#deleteTemasDataConfirm').on('click', function () {
-		
+
 		app.dialog.confirm('¿Está seguro que desea borrar el tema ' + rutaTopic + '?', function () {
-			
+
 			console.log('trabajando en el nombre de la seccion con prompt');
-			//buscar la id del tema, 
+			//buscar la id del tema,
 			//sin boton, ponerlo en el topic, guardar el doc.id en una variable y usarlo ahi
-			
-			
+
+
 			var db = firebase.firestore();
 			db.collection("temas").doc(idCurrentTopic).delete().then(function() {
 				console.log("Documento borrado!");
 				app.dialog.alert('Listo, tema ' + rutaTopic + ' borrado.');
 				mainView.router.navigate('/news/');
-				
+
 			})
 			.catch(function(error) {
 				console.error("Error: ", error);
 			});
 		});
-		
+
 	});
 
 
 	$$('#btnHacerNoticia').on('click', function () {
-		
+
 		app.dialog.confirm('¿Está seguro que desea hacer noticia el tema ' + rutaTopic + '?', function () {
-			
+
 			console.log('trabajando en el nombre de la seccion con prompt');
-			//buscar la id del tema, 
+			//buscar la id del tema,
 			//sin boton, ponerlo en el topic, guardar el doc.id en una variable y usarlo ahi
-			
-			
+
+
 			var db = firebase.firestore();
 			db.collection("temas").doc(idCurrentTopic).update({ noticia: true }).then(function() {
 				console.log("Documento borrado!");
 				app.dialog.alert('Listo, tema ' + rutaTopic + ' es noticia.');
 				mainView.router.navigate('/news/');
-				
+
 			})
 			.catch(function(error) {
 				console.error("Error: ", error);
 			});
 		});
-		
+
 	});
 	$$('#btnQuitarNoticia').on('click', function () {
-		
+
 		app.dialog.confirm('¿Está seguro que desea quitar de noticias el tema ' + rutaTopic + '?', function () {
-			
+
 			console.log('trabajando en el nombre de la seccion con prompt');
-			//buscar la id del tema, 
+			//buscar la id del tema,
 			//sin boton, ponerlo en el topic, guardar el doc.id en una variable y usarlo ahi
-			
-			
+
+
 			var db = firebase.firestore();
 			db.collection("temas").doc(idCurrentTopic).update({ noticia: false }).then(function() {
 				console.log("Documento borrado!");
 				app.dialog.alert('Listo, tema ' + rutaTopic + ' ya no es noticia.');
 				mainView.router.navigate('/news/');
-				
+
 			})
 			.catch(function(error) {
 				console.error("Error: ", error);
 			});
 		});
-		
+
 	});
 
 	/*$$("#btnHacerNoticia").on('click', function() {
@@ -600,11 +600,11 @@ $$(document).on('page:init', '.page[data-name="topicview"]', function (e, page) 
 		var db = firebase.firestore();
 		var db.collection("temas").doc(idCurrentTopic).update({ noticia: true }).then(function() {
 			console.log("actualizado ok");
-		
+
 		});
-		
-		
-			.catch(function(error) { 
+
+
+			.catch(function(error) {
 			console.log("Error: " , error);
 			});
 
@@ -613,56 +613,56 @@ $$(document).on('page:init', '.page[data-name="topicview"]', function (e, page) 
 	function showUserRol(userEmail){
 		var db = firebase.firestore();
 		var perRef = db.collection("usuarios").where("mail","==", userEmail);
-		perRef.get().then(function(querySnapshot) { 
-		querySnapshot.forEach(function(doc) { 
-		
+		perRef.get().then(function(querySnapshot) {
+		querySnapshot.forEach(function(doc) {
+
 		return doc.data().rol;
-		
+
 		});
 		})
-		
-		
-			.catch(function(error) { 
+
+
+			.catch(function(error) {
 			console.log("Error: " , error);
 			});
 
-    };	
-	
+    };
+
 		function showUserFirma(userEmail){
 		var db = firebase.firestore();
 		var perRef = db.collection("usuarios").where("mail","==", userEmail);
-		perRef.get().then(function(querySnapshot) { 
-		querySnapshot.forEach(function(doc) { 
-		
+		perRef.get().then(function(querySnapshot) {
+		querySnapshot.forEach(function(doc) {
+
 		return doc.data().firma;
-		
+
 		});
 		})
-		
-		
-			.catch(function(error) { 
+
+
+			.catch(function(error) {
 			console.log("Error: " , error);
 			});
 
-    };	
-	
+    };
+
 	function showUserAvatar(userEmail){
 		var db = firebase.firestore();
 		var perRef = db.collection("usuarios").where("mail","==", userEmail);
-		perRef.get().then(function(querySnapshot) { 
-		querySnapshot.forEach(function(doc) { 
-		
+		perRef.get().then(function(querySnapshot) {
+		querySnapshot.forEach(function(doc) {
+
 		return doc.data().avatar;
-		
+
 		});
 		})
-		
-		
-			.catch(function(error) { 
+
+
+			.catch(function(error) {
 			console.log("Error: " , error);
 			});
 
-    };	
+    };
 
 
 	function showTopicComments(rutaTopic) {
@@ -671,16 +671,16 @@ $$(document).on('page:init', '.page[data-name="topicview"]', function (e, page) 
 		//loadUsersInfo();
 		var db = firebase.firestore();
 		var perRef = db.collection("comentarios").where("id_tema","==", rutaTopic).orderBy("timestamp");//TODO, ver de filtrar esto mejor, el timestamp está mal?
-		perRef.get().then(function(querySnapshot) { 
-		querySnapshot.forEach(function(doc) { 
+		perRef.get().then(function(querySnapshot) {
+		querySnapshot.forEach(function(doc) {
 		console.log("entra en comentarios: ");
 		console.log("data:" + doc.data().timestamp);
 		console.log("data:" + doc.data().fecha);
 		console.log("data:" + doc.data().hora);
 		console.log("data:" + doc.data().id_tema);
 		console.log("data:" + doc.data().id_usuario);
-		console.log("data:" + doc.data().texto); 
-		
+		console.log("data:" + doc.data().texto);
+
 		var email = doc.data().id_usuario;
 		//var userNombre = "#userNombre"+emailA;
 		//var userFirma = "#userFirma"+emailA;
@@ -691,16 +691,16 @@ $$(document).on('page:init', '.page[data-name="topicview"]', function (e, page) 
 		var hora = doc.data().hora;
 		var texto = doc.data().texto;
 		var mensajeId= doc.id;
-		
+
 		var userAvatar = "";
 		var userFirma = "";
 		var userRol = "";
 		var userNombre ="";
-		
+
 		var db2 = firebase.firestore();
 		var perRef2 = db2.collection("usuarios").where("mail","==", email);
-		perRef2.get().then(function(querySnapshot2) { 
-		querySnapshot2.forEach(function(doc2) { 
+		perRef2.get().then(function(querySnapshot2) {
+		querySnapshot2.forEach(function(doc2) {
 			var userAvatar = doc2.data().avatar;
 			var userFirma = doc2.data().firma;
 			var userRol = doc2.data().rol;
@@ -708,77 +708,77 @@ $$(document).on('page:init', '.page[data-name="topicview"]', function (e, page) 
 
 			if(userEmail=="admin@admin.com"){
 				$$('#listAllComments').append('<div class="card demo-facebook-card commentMoveUp"><div class="card-header"><div class="demo-facebook-avatar"><img id=""src="'+userAvatar+'" width="34" height="34" /></div>					<div class="demo-facebook-name" id=""></div>	'+userNombre+'<div class="demo-facebook-name" id=""></div>					<div class="demo-facebook-name" id="">'+userRol+'</div>					<div class="demo-facebook-date">'+fecha+'</div>					<div class="demo-facebook-date">'+hora+'</div>				</div>				<div class="card-content card-content-padding">					'+ texto +'				</div>				<div class="block"><div class="block-footer firma">'+userFirma+'</div> </div> </div>');
-				$$('#listAllComments').append('<div class="block block-strong borrar">					<div class="row">						 <div class="col-25"></div> <div class="col-25"></div><button class="button col-25 btnBorrar" onclick="deleteMsg(\''+doc.id+'\')">Borrar</button></div> <div class="col-25"></div>				</div>');
+				$$('#listAllComments').append('<div class="block borrar">					<div class="row">						 <div class="col-25"></div> <div class="col-25"></div><button class="button col-15 btnBorrar" onclick="deleteMsg(\''+doc.id+'\')">Borrar</button></div> 				</div>');
 			}else if(userEmail == doc.data().id_usuario){
 				$$('#listAllComments').append('<div class="card demo-facebook-card commentMoveUp"><div class="card-header"><div class="demo-facebook-avatar"><img id=""src="'+userAvatar+'" width="34" height="34" /></div>					<div class="demo-facebook-name" id=""></div>	'+userNombre+'<div class="demo-facebook-name" id=""></div>					<div class="demo-facebook-name" id="">'+userRol+'</div>					<div class="demo-facebook-date">'+fecha+'</div>					<div class="demo-facebook-date">'+hora+'</div>				</div>				<div class="card-content card-content-padding">					'+ texto +'				</div>				<div class="block"><div class="block-footer firma">'+userFirma+'</div> </div> </div>');
-				$$('#listAllComments').append('<div class="block block-strong borrar">					<div class="row">						 <div class="col-25"></div> <div class="col-25"></div><button class="button col-25 btnBorrar" onclick="deleteMsg(\''+doc.id+'\')">Borrar</button></div> <div class="col-25"></div>				</div>');
+				$$('#listAllComments').append('<div class="block borrar">					<div class="row">						 <div class="col-25"></div> <div class="col-25"></div><button class="button col-15 btnBorrar" onclick="deleteMsg(\''+doc.id+'\')">Borrar</button></div> 				</div>');
 			}else {
 				$$('#listAllComments').append('<div class="card demo-facebook-card commentMoveUp"><div class="card-header"><div class="demo-facebook-avatar"><img id=""src="'+userAvatar+'" width="34" height="34" /></div>					<div class="demo-facebook-name" id=""></div>	'+userNombre+'<div class="demo-facebook-name" id=""></div>					<div class="demo-facebook-name" id="">'+userRol+'</div>					<div class="demo-facebook-date">'+fecha+'</div>					<div class="demo-facebook-date">'+hora+'</div>				</div>				<div class="card-content card-content-padding">					'+ texto +'				</div>				<div class="block"><div class="block-footer">'+userFirma+'</div> </div> </div>');
 			};
-		
-		
+
+
 		});
 		})
-		
-		
-			.catch(function(error) { 
+
+
+			.catch(function(error) {
 			console.log("Error: " , error);
 			});
-		
 
-		//$$('#listAllComments').append('<div class="card demo-facebook-card"><div class="card-header"><div class="demo-facebook-avatar"><img src="'+userAvatar+'" width="34" height="34" /></div>					<div class="demo-facebook-name">'+doc.data().id_usuario+'</div>					<div class="demo-facebook-name">'+userRol+'</div>					<div class="demo-facebook-date">'+doc.data().fecha+'</div>					<div class="demo-facebook-date">'+doc.data().hora+'</div>				</div>				<div class="card-content card-content-padding">					'+doc.data().texto+'				</div>				<div>'+userFirma+'</div> </div>'); 
-		
+
+		//$$('#listAllComments').append('<div class="card demo-facebook-card"><div class="card-header"><div class="demo-facebook-avatar"><img src="'+userAvatar+'" width="34" height="34" /></div>					<div class="demo-facebook-name">'+doc.data().id_usuario+'</div>					<div class="demo-facebook-name">'+userRol+'</div>					<div class="demo-facebook-date">'+doc.data().fecha+'</div>					<div class="demo-facebook-date">'+doc.data().hora+'</div>				</div>				<div class="card-content card-content-padding">					'+doc.data().texto+'				</div>				<div>'+userFirma+'</div> </div>');
+
 		//este sirve, acomodar
-		//$$('#listAllComments').append('<div class="card demo-facebook-card"><div class="card-header"><div class="demo-facebook-avatar"><img id=""src="'+userAvatar+'" width="34" height="34" /></div>					<div class="demo-facebook-name" id=""></div>	'+userNombre+'<div class="demo-facebook-name" id="">'+email+'</div>					<div class="demo-facebook-name" id="">'+userRol+'</div>					<div class="demo-facebook-date">'+fecha+'</div>					<div class="demo-facebook-date">'+hora+'</div>				</div>				<div class="card-content card-content-padding">					'+ texto +'				</div>				<div id="">'+userFirma+'</div> </div>'); 
+		//$$('#listAllComments').append('<div class="card demo-facebook-card"><div class="card-header"><div class="demo-facebook-avatar"><img id=""src="'+userAvatar+'" width="34" height="34" /></div>					<div class="demo-facebook-name" id=""></div>	'+userNombre+'<div class="demo-facebook-name" id="">'+email+'</div>					<div class="demo-facebook-name" id="">'+userRol+'</div>					<div class="demo-facebook-date">'+fecha+'</div>					<div class="demo-facebook-date">'+hora+'</div>				</div>				<div class="card-content card-content-padding">					'+ texto +'				</div>				<div id="">'+userFirma+'</div> </div>');
 		//$$('#listAllComments').append('<div class="card demo-facebook-card"><div class="card-header"><div class="demo-facebook-avatar"><img id=""src="'+avatarUserComment+'" width="34" height="34" /></div>					<div class="demo-facebook-name" id="">'+nameUserComment+'</div>	<div class="demo-facebook-name" id=""></div>		'+doc.data().id_usuario+'			<div class="demo-facebook-name" id="">'+userRolComment+'</div>					<div class="demo-facebook-date">'+fecha+'</div>					<div class="demo-facebook-date">'+hora+'</div>				</div>				<div class="card-content card-content-padding">					'+ texto +'				</div>				<div id="">'+firmaUserComment+'</div> </div>');
 		});
 		})
-		
-		
-		.catch(function(error) { 
+
+
+		.catch(function(error) {
 		console.log("Error: " , error);
 		});
 
-    };	
+    };
 
 
 	 function showUserNombre(userEmail){
 		var db = firebase.firestore();
 		var perRef = db.collection("usuarios").where("mail","==", userEmail);
-		perRef.get().then(function(querySnapshot) { 
-		querySnapshot.forEach(function(doc) { 
-		
+		perRef.get().then(function(querySnapshot) {
+		querySnapshot.forEach(function(doc) {
+
 		return doc.data().nombre;
-		
+
 		});
 		})
-		.catch(function(error) { 
+		.catch(function(error) {
 				console.log("Error: " , error);
-				
+
 		});
-	};	
-	
+	};
+
 
 
 
 });
 
 //no esta bien cerrado algo arriba --^
-//y rompe cosas abajo 
+//y rompe cosas abajo
 
 
 
 $$(document).on('page:init', '.page[data-name="index"]', function (e) {
-	
-	console.log(userEmail + " entra al init del index"); 
-	
+
+	console.log(userEmail + " entra al init del index");
+
 //log in y registro
     $$("#btnIS").on('click', function() {
         console.log('click en btnIS');
 		var email = $$("#userLog").val();
 		var password = $$("#passLog").val();
-		
-		
+
+
 		firebase.auth().signInWithEmailAndPassword(email, password).then((user) => {
 			mainView.router.navigate('/news/');
 			console.log("nombre de usuario es (por ahora mail): " + email);
@@ -790,37 +790,37 @@ $$(document).on('page:init', '.page[data-name="index"]', function (e) {
 		var errorCode = error.code;
 		var errorMessage = error.message;
 		alert(errorMessage);
-		
+
 		console.log(error);
 		});
 
-		
+
         /*if($$("#userLog").val() != "" && $$("#passLog").val() != ""){
 			mainView.router.navigate('/news/');
         }else{
             app.dialog.alert("Completa todo los campos","Atención");
         }; */
 
-		
+
     });
-	
-	
-	
+
+
+
 	$$("#btnRegForm").on('click', function() {
         console.log('click en btnReg');
-		mainView.router.navigate('/register/');	
-		
+		mainView.router.navigate('/register/');
+
     });
 
 
 
-});	
+});
 
 
 $$(document).on('page:init', '.page[data-name="news"]', function (e) {
-	
+
 	showUserAvatar(userEmail);
-	
+
     $$("#btnTopicMenu").on("click",function(){
         console.log('click en botones ac2');
 		if(userEmail=="admin@admin.com"){
@@ -833,7 +833,7 @@ $$(document).on('page:init', '.page[data-name="news"]', function (e) {
 							newTopic();
                         }
                     },
-                   
+
 					{
                         text: 'Nueva Sección',
                         onClick: function(){
@@ -842,11 +842,11 @@ $$(document).on('page:init', '.page[data-name="news"]', function (e) {
                         }
                     },
 
-					
+
                 ],
-                
+
             });
-			
+
 		}else{
 			var btnTopicMenu = app.actions.create({
                 buttons: [
@@ -864,10 +864,10 @@ $$(document).on('page:init', '.page[data-name="news"]', function (e) {
 		}
 
         btnTopicMenu.open();
-    });	
-	
-	
-	
+    });
+
+
+
 	function getUserRandomId(){
 		var db = firebase.firestore();
 		var perRef = db.collection("usuarios").where("mail","==", userEmail);
@@ -878,25 +878,25 @@ $$(document).on('page:init', '.page[data-name="news"]', function (e) {
 				idCurrentUser = doc.id;
 		});
 		})
-		
-		
-			.catch(function(error) { 
+
+
+			.catch(function(error) {
 			console.log("Error: " , error);
 			});
 
-    };	
-	
+    };
+
 	getUserRandomId();
-	
-	
-	
+
+
+
 	function isNews(){
 	console.log("maybe is news?");
 	var db = firebase.firestore();
 	var perRef = db.collection("temas").where("noticia","==", true);
-	perRef.get().then(function(querySnapshot) { 
-	querySnapshot.forEach(function(doc) { 
-	
+	perRef.get().then(function(querySnapshot) {
+	querySnapshot.forEach(function(doc) {
+
 	var titulo = doc.data().titulo_tema;
 	var id_usuario = doc.data().id_usuario;
 	var id_seccion = doc.data().id_seccion;
@@ -906,45 +906,45 @@ $$(document).on('page:init', '.page[data-name="news"]', function (e) {
 	console.log("con id: " + doc.id);
 
 	$$('#noticiasLista').append('				  <li>					<a href="/topicview/'+titulo +'/' +doc.id+'/' + '" class="item-link item-content">					  <div class="item-inner">						<div class="item-title-row">						  <div class="item-title">'+titulo+'</div>						  <div class="item-after">'+val_hora+'</div>						</div>						<div class="item-subtitle">Escrito por '+id_usuario+' en '+id_seccion+'</div>						<div class="item-text">'+texto+'</div>					  </div>					</a>					</li> ');
-	
+
 	});
 	})
-	
-	
-		.catch(function(error) { 
+
+
+		.catch(function(error) {
 		console.log("Error: " , error);
 		});
 
-    };	
+    };
 	if(userEmail != ""){
 		isNews();
 	}
-	
-	
-	
+
+
+
 	$$("#esNoticia").on('click', function() {
 		console.log('click en esNoticia');
 		isNews();
 
 	});
-	
-	console.log(userEmail + " entra al init de news"); 
+
+	console.log(userEmail + " entra al init de news");
 	/*
 	function leerTopic(){
 		console.log("funcion leerTopic, parametro id del tema, metido a lo bruto en el html");
 		console.log("cambiar valores en el html para OP");
-		
+
 	}*/
 	/*TODO convinar esto con lo de las rutas
 	function leerTopic() {
         console.log('click en leerTopic');
 		//$$('#temasLista').html('');
-		
-		mainView.router.navigate('/topicview/');	
+
+		mainView.router.navigate('/topicview/');
 		var db = firebase.firestore();
 		var perRef = db.collection("temas").where("titulo_tema","==", "Reglas");
-		perRef.get().then(function(querySnapshot) { 
-		querySnapshot.forEach(function(doc) { 
+		perRef.get().then(function(querySnapshot) {
+		querySnapshot.forEach(function(doc) {
 		/*console.log("data:" + doc.data().titulo_tema);
 		console.log("data:" + doc.data().timestamp);
 		console.log("data:" + doc.data().fecha);
@@ -957,20 +957,20 @@ $$(document).on('page:init', '.page[data-name="news"]', function (e) {
 		$$('#viewTopicIdSection').html(doc.data().id_seccion);
 		$$('#viewTopicIdUsuario').html(doc.data().id_usuario);
 		$$('#viewTopicTexto').html(doc.data().texto);
-		
+
 		//$$('#temasLista').append('<li><a href="#" id="'+doc.data().nombre+'">'+ doc.data().nombre +'</a></li>'); //podria usar "this", tambien una funcion aca mismo, $(selector).append(content,function(index,html))
 		});
 		})
-		.catch(function(error) { 
+		.catch(function(error) {
 		console.log("Error: " , error);
 		});
-		
+
     };
 	*/
 	//esto no hace nada, eliminar
 	function leerMensajes(){
 		console.log("funcion leerMensajes");
-		
+
 	}//esto tambien
 	function mostrarComentar(){
 		console.log("funcion mostrarComentar");
@@ -983,30 +983,30 @@ $$(document).on('page:init', '.page[data-name="news"]', function (e) {
 		leerTopic();
 		leerMensajes();
 		mostrarComentar();
-		
-		
-		
-		//mainView.router.navigate('/msgform/');	
-		
+
+
+
+		//mainView.router.navigate('/msgform/');
+
     });
 	/*
 	$$("#newMsg").on('click', function() {
         console.log('click en newMsg');
-		mainView.router.navigate('/msgform/');	
-		
+		mainView.router.navigate('/msgform/');
+
     });
 	*/
 
 	$$("#btnNewTopic").on('click', function() {
         console.log('click en btnNewTopic');
-		mainView.router.navigate('/topicform/');	
-		
+		mainView.router.navigate('/topicform/');
+
     });
-	
+
 	function newTopic() {
         console.log('click en btnNewTopic');
-		mainView.router.navigate('/topicform/');	
-		
+		mainView.router.navigate('/topicform/');
+
     };
 	//lo puse con una funcion en el action sheet, no se usa
 	$$('#buildTemasDataPrompt').on('click', function () {
@@ -1024,7 +1024,7 @@ $$(document).on('page:init', '.page[data-name="news"]', function (e) {
 				app.dialog.alert('Listo, sección ' + name + ' creada.');
 				listarTemas();
 			})
-			.catch(function(error) { 
+			.catch(function(error) {
 				console.log("Error: " + error);
 				});
 			});
@@ -1046,48 +1046,48 @@ $$(document).on('page:init', '.page[data-name="news"]', function (e) {
 				app.dialog.alert('Listo, sección ' + name + ' creada.');
 				listarTemas();
 			})
-			.catch(function(error) { 
+			.catch(function(error) {
 				console.log("Error: " + error);
 				});
 			});
 		});
 	};
-	
 
 
 
 
 
-	
+
+
 	function listarTemas() {
         console.log('listaTemasData');
 		$$('#temasLista').html('');
 		var db = firebase.firestore();
-		var perRef = db.collection("secciones"); 
-		perRef.get() 
-		.then(function(querySnapshot) { 
-		querySnapshot.forEach(function(doc) { 
+		var perRef = db.collection("secciones");
+		perRef.get()
+		.then(function(querySnapshot) {
+		querySnapshot.forEach(function(doc) {
 		console.log("data:" + doc.data().nombre);
 		//$$('#temasLista').append('<li><a href="#" id="'+doc.data().nombre+'">'+ doc.data().nombre +'</a></li>'); //podria usar "this", tambien una funcion aca mismo, $(selector).append(content,function(index,html))
-		
-		$$('#temasLista').append('<li><a href="/sectionview/'+doc.data().nombre +'/' + '" id="'+doc.data().nombre+'">'+ doc.data().nombre +'</a></li>'); 
-		
-		
+
+		$$('#temasLista').append('<li><a href="/sectionview/'+doc.data().nombre +'/' + '" id="'+doc.data().nombre+'">'+ doc.data().nombre +'</a></li>');
+
+
 		});
-		
+
 		})
-		.catch(function(error) { 
+		.catch(function(error) {
 		console.log("Error: " , error);
 		});
-		
+
     };
 	listarTemas();
-	
-	
 
 
-	
-	
+
+
+
+
 	$$("#logOut").on('click', function() {
         console.log('click en logOut');
 		firebase.auth().signOut().then(() => {
@@ -1101,9 +1101,9 @@ $$(document).on('page:init', '.page[data-name="news"]', function (e) {
 		}).catch((error) => {
 		  // An error happened.
 		});
-		
+
     });
-	
+
 	//TODO: ya lo hice con un prompt, se puede sacar
 	$$("#buildSection").on('click', function() {
 		sectionName = "Off-topic";
@@ -1112,21 +1112,21 @@ $$(document).on('page:init', '.page[data-name="news"]', function (e) {
 		var data = {
 			nombre: sectionName,
 			numero: 02,
-			
+
 			};
 		db.collection("secciones").add(data).then(function(docRef){
 			console.log("OK! Con el ID: " + docRef.id);
 		})
-		.catch(function(error) { 
+		.catch(function(error) {
 			console.log("Error: " + error);
 		});
-		
-		
+
+
     });
-	
+
 	$$("#bajaData").on('click', function() {
         console.log('click en bajadata');
-		
+
 		var db = firebase.firestore();
 		db.collection("usuarios").doc("wFf2rSODTcASUia73HFY").delete().then(function() {
 			console.log("Documento borrado!");
@@ -1136,7 +1136,7 @@ $$(document).on('page:init', '.page[data-name="news"]', function (e) {
 			console.error("Error: ", error);
 
 		});
-		
+
     });
 	//TODO agregarle un prompt/hecho, está listo para acomodar con css
 	$$("#cambiarFirma").on('click', function() {
@@ -1155,28 +1155,28 @@ $$(document).on('page:init', '.page[data-name="news"]', function (e) {
 			});
 		});
 	});
-	
+
 	function showUserAvatar(userEmail){
 		var db = firebase.firestore();
 		var perRef = db.collection("usuarios").where("mail","==", userEmail);
-		perRef.get().then(function(querySnapshot) { 
-		querySnapshot.forEach(function(doc) { 
-		
+		perRef.get().then(function(querySnapshot) {
+		querySnapshot.forEach(function(doc) {
+
 		userCurrentAvatar = doc.data().avatar;
-		
+
 		});
 		})
-		
-		
-			.catch(function(error) { 
+
+
+			.catch(function(error) {
 			console.log("Error: " , error);
 			});
 
-    };	
-	
+    };
+
 	$$(cambiarAvatar).on('click', function() {
         console.log('click en cambiarAvatar');
-		
+
 		app.dialog.prompt('Ingrese la URL de su nuevo avatar: ', function (avatarN) {
 			app.dialog.confirm('¿Está seguro que tu nuevo avatar es '+ avatarN+ ' ?', function () {
 				console.log('trabajando en la firma');
@@ -1191,12 +1191,12 @@ $$(document).on('page:init', '.page[data-name="news"]', function (e) {
 			});
 		});
 	});
-	
-	
+
+
 	//TODO agregarle un prompt
 	/*$$("#cambiarAvatar").on('click', function() {
         console.log('click en bajadata');
-		
+
 		var db = firebase.firestore();
 		db.collection("usuarios").doc(idCurrentUser).update({ avatar: "https://upload.wikimedia.org/wikipedia/commons/f/f4/User_Avatar_2.png" }).then(function() {
 			console.log("avatar cambiado");
@@ -1206,12 +1206,12 @@ $$(document).on('page:init', '.page[data-name="news"]', function (e) {
 			console.error("Error: ", error);
 
 		});
-		
+
     });*/
 
 	$$("#listData").on('click', function() {
         console.log('click en listdata');
-		
+
 		var db = firebase.firestore();
 		var perRef = db.collection("usuarios");
 		perRef.get().then(function(querySnapshot) {
@@ -1223,12 +1223,12 @@ $$(document).on('page:init', '.page[data-name="news"]', function (e) {
 			console.log("Error: " , error);
 		});
 
-		
+
     });
-	
+
 	$$("#listWhereData").on('click', function() {
         console.log('click en listWhereData');
-		
+
 
 		var db = firebase.firestore();
 		var perRef = db.collection("usuarios").where("mail","==","eduardo@hotmail.com");
@@ -1242,14 +1242,14 @@ $$(document).on('page:init', '.page[data-name="news"]', function (e) {
 			console.log("Error: " , error);
 		});
 
-		
+
     });
 
 
 
 	$$("#modData").on('click', function() {
         console.log('click en moddata');
-		
+
 		var db = firebase.firestore();
 		db.collection("personas").doc("wFf2rSODTcASUia73HFY").delete().then(function() {
 			console.log("Documento borrado!");
@@ -1259,10 +1259,7 @@ $$(document).on('page:init', '.page[data-name="news"]', function (e) {
 			console.error("Error: ", error);
 
 		});
-		
+
     });
 
-});	
-
-
-
+});
