@@ -8,7 +8,7 @@
             <span class="aurora-only">Back</span>
             </a>
         </div>
-			<div class="">
+			<div>
 				<div class="block">
 					<a href="#">	<div id="menuForoUrl" class="col button button-fill color-blue">Foro</div></a>
 				</div>
@@ -17,17 +17,22 @@
 	</div>
     <div class="page-content">
 	  <div class="page no-navbar no-toolbar no-swipeback">
-		<div class="page-content">
+		<div class="page-content bgnDN">
 		<div class="block-header"></div>
 		  <div class="block-title block-title-medium" id="titleTopicView"></div>
 			<div class="block block-strong topicOpFrame">
+        <div class="botonesTema">
+          <div class="invis btnMover btnTopicGeneral" id="btnHacerNoticia">Hacer noticia</div>
+          <div class="invis btnMover btnTopicGeneral" id="btnQuitarNoticia">Quitar noticia</div>
+          <div class="invis btnMover btnTopicGeneral" id="deleteTemasDataConfirm">Borrar Tema</div>
+        </div>
 			<div class="card demo-facebook-card topicOpCard">
 				<div class="card-header">
 					<div class="demo-facebook-avatar"><img id="topicOpAvatar" src="" width="34" height="34" /></div>
-					<div class="demo-facebook-name" id="topicOpName"></div>
-					<div class="demo-facebook-name" id="topicOpIcon"></div>
-					<div class="demo-facebook-date" id="topicFecha"></div>
-					<div class="demo-facebook-date" id="topicHora"></div>
+					<div class="demo-facebook-name topicNombre" id="topicOpName"></div>
+					<div class="demo-facebook-name topicRol" id="topicOpIcon"></div>
+					<div class="demo-facebook-date topicFecha" id="topicFecha"></div>
+					<div class="demo-facebook-date topicHora" id="topicHora"></div>
 				</div>
 				<div class="card-content card-content-padding">
 					<p id="viewTopicTexto"></p>
@@ -37,26 +42,18 @@
 				<div class="block">
 					<div class="block-footer">
 						<p id="topicOpFirma" class="firma"></p>
-					</div>
-				</div>
+          </div>
+        </div>
 				<!-- <div class="card-footer"><a href="#" class="link">Like</a><a href="#" class="link">Comment</a><a href="#"	class="link">Share</a></div> -->
 			</div>
 			</div>
-      <div class="block">
-				<div class="row">
-					<button class="button col invis btnMover" id="deleteTemasDataConfirm">Borrar Tema</button>
-					<button class="button col invis btnMover" id="btnHacerNoticia">Hacer noticia</button>
-					<button class="button col invis btnMover" id="btnQuitarNoticia">Quitar noticia</button>
-        </div>
-      </div>
 
-			<div id="listAllComments"></div>
-
-			<div class="card demo-facebook-card">
+      <div id="listAllComments"></div>
+      <div class="card demo-facebook-card">
 				<div class="card-header">
 					<div class="demo-facebook-avatar"><img id="topicCurrentUserAvatar" src="" width="34" height="34" /></div>
-					<div class="demo-facebook-name" id="topicCurrentUserName"></div>
-					<div class="demo-facebook-name" id="topicCurrentUserIcon"></div>
+					<div class="demo-facebook-name topicNombre" id="topicCurrentUserName"></div>
+					<div class="demo-facebook-name topicRol" id="topicCurrentUserIcon"></div>
 				</div>
 				<div class="card-content card-content-padding">
 					  <div class="item-inner">

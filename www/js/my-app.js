@@ -707,13 +707,13 @@ $$(document).on('page:init', '.page[data-name="topicview"]', function (e, page) 
 			var userNombre = doc2.data().nombre;
 
 			if(userEmail=="admin@admin.com"){
-				$$('#listAllComments').append('<div class="card demo-facebook-card commentMoveUp"><div class="card-header"><div class="demo-facebook-avatar"><img id=""src="'+userAvatar+'" width="34" height="34" /></div>					<div class="demo-facebook-name" id=""></div>	'+userNombre+'<div class="demo-facebook-name" id=""></div>					<div class="demo-facebook-name" id="">'+userRol+'</div>					<div class="demo-facebook-date">'+fecha+'</div>					<div class="demo-facebook-date">'+hora+'</div>				</div>				<div class="card-content card-content-padding">					'+ texto +'				</div>				<div class="block"><div class="block-footer firma">'+userFirma+'</div> </div> </div>');
-				$$('#listAllComments').append('<div class="block borrar">					<div class="row">						 <div class="col-25"></div> <div class="col-25"></div><button class="button col-15 btnBorrar" onclick="deleteMsg(\''+doc.id+'\')">Borrar</button></div> 				</div>');
+				$$('#listAllComments').append('<div class="card demo-facebook-card commentMoveUp"><div class="card-header"><div class="demo-facebook-avatar"><img id=""src="'+userAvatar+'" width="34" height="34" /></div>					<div class="demo-facebook-name topicNombre">'+userNombre+'</div>	<div class="demo-facebook-name topicRol">'+userRol+'</div>					<div class="demo-facebook-date topicFecha">'+fecha+'</div>					<div class="demo-facebook-date topicHora">'+hora+'</div>				</div>				<div class="card-content card-content-padding">					'+ texto +'				</div>				<div class="block"><div class="block-footer firma">'+userFirma+'<div class="btnBorrar" onclick="deleteMsg(\''+doc.id+'\')">Borrar</div></div> </div> </div>');
+				//$$('#listAllComments').append('<div class="block borrar">					<div class="row">						 <div class="col-25"></div> <div class="col-25"></div><button class="button col-15 btnBorrar" onclick="deleteMsg(\''+doc.id+'\')">Borrar</button></div> 				</div>');
 			}else if(userEmail == doc.data().id_usuario){
-				$$('#listAllComments').append('<div class="card demo-facebook-card commentMoveUp"><div class="card-header"><div class="demo-facebook-avatar"><img id=""src="'+userAvatar+'" width="34" height="34" /></div>					<div class="demo-facebook-name" id=""></div>	'+userNombre+'<div class="demo-facebook-name" id=""></div>					<div class="demo-facebook-name" id="">'+userRol+'</div>					<div class="demo-facebook-date">'+fecha+'</div>					<div class="demo-facebook-date">'+hora+'</div>				</div>				<div class="card-content card-content-padding">					'+ texto +'				</div>				<div class="block"><div class="block-footer firma">'+userFirma+'</div> </div> </div>');
-				$$('#listAllComments').append('<div class="block borrar">					<div class="row">						 <div class="col-25"></div> <div class="col-25"></div><button class="button col-15 btnBorrar" onclick="deleteMsg(\''+doc.id+'\')">Borrar</button></div> 				</div>');
+				$$('#listAllComments').append('<div class="card demo-facebook-card commentMoveUp"><div class="card-header"><div class="demo-facebook-avatar"><img id=""src="'+userAvatar+'" width="34" height="34" /></div>					<div class="demo-facebook-name topicNombre">'+userNombre+'</div> <div class="demo-facebook-name topicRol">'+userRol+'</div>					<div class="demo-facebook-date topicFecha">'+fecha+'</div>					<div class="demo-facebook-date topicHora">'+hora+'</div>				</div>				<div class="card-content card-content-padding">					'+ texto +'				</div>				<div class="block"><div class="block-footer firma">'+userFirma+'<div class="btnBorrar" onclick="deleteMsg(\''+doc.id+'\')">Borrar</div></div> </div> </div> </div>');
+				//$$('#listAllComments').append('<div class="block borrar">					<div class="row">						 <div class="col-25"></div> <div class="col-25"></div><button class="button col-15 btnBorrar" onclick="deleteMsg(\''+doc.id+'\')">Borrar</button></div> 				</div>');
 			}else {
-				$$('#listAllComments').append('<div class="card demo-facebook-card commentMoveUp"><div class="card-header"><div class="demo-facebook-avatar"><img id=""src="'+userAvatar+'" width="34" height="34" /></div>					<div class="demo-facebook-name" id=""></div>	'+userNombre+'<div class="demo-facebook-name" id=""></div>					<div class="demo-facebook-name" id="">'+userRol+'</div>					<div class="demo-facebook-date">'+fecha+'</div>					<div class="demo-facebook-date">'+hora+'</div>				</div>				<div class="card-content card-content-padding">					'+ texto +'				</div>				<div class="block"><div class="block-footer">'+userFirma+'</div> </div> </div>');
+				$$('#listAllComments').append('<div class="card demo-facebook-card commentMoveUp"><div class="card-header"><div class="demo-facebook-avatar"><img id=""src="'+userAvatar+'" width="34" height="34" /></div>					<div class="demo-facebook-name topicNombre">'+userNombre+'</div>					<div class="demo-facebook-name topicRol">'+userRol+'</div>					<div class="demo-facebook-date topicFecha">'+fecha+'</div>					<div class="demo-facebook-date topicHora">'+hora+'</div>				</div>				<div class="card-content card-content-padding">					'+ texto +'				</div>				<div class="block"><div class="block-footer">'+userFirma+'</div> </div> </div>');
 			};
 
 
@@ -822,7 +822,7 @@ $$(document).on('page:init', '.page[data-name="news"]', function (e) {
 	showUserAvatar(userEmail);
 
     $$("#btnTopicMenu").on("click",function(){
-        console.log('click en botones ac2');
+        console.log('click en boton btnTopicMenu');
 		if(userEmail=="admin@admin.com"){
 			var btnTopicMenu = app.actions.create({
                 buttons: [
@@ -844,6 +844,7 @@ $$(document).on('page:init', '.page[data-name="news"]', function (e) {
 
 
                 ],
+                cssClass: 'moverMenu',
 
             });
 
